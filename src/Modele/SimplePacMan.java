@@ -10,30 +10,29 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  *
  * @author fred
  */
 public class SimplePacMan extends Observable implements Runnable {
+    private int x;
+    private int y;
+    private int sizeX;
+    private int sizeY;
+    private Random r;
+    
+    public SimplePacMan(int sizeX, int sizeY) {
+        this.r = new Random();
 
-    int x, y, sizeX, sizeY;
-    
-    Random r = new Random();
-    
-    
-    public SimplePacMan(int _sizeX, int _sizeY) {
-        x = 0; y = 0;
-        
-        sizeX = _sizeX;
-        sizeY = _sizeY;
-       
+        this.x = 0;
+        this.y = 0;
+        this.sizeX = sizeX;
+        this.sizeY = sizeY;
     }
     
     public int getX() {
         return x;
     }
-    
     public int getY() {
         return y;
     }
@@ -43,20 +42,19 @@ public class SimplePacMan extends Observable implements Runnable {
     }
     
     public void initXY() {
-        x = 0;
-        y = 0;
+        this.x = 0;
+        this.y = 0;
     }
     
     @Override
     public void run() {
         while(true) { // spm descent dasn la grille à chaque pas de temps
-            
            int deltaX = r.nextInt(2);
            
            if (x + deltaX > 0 && x + deltaX < sizeX) {
                x += deltaX;
            }
-           
+
            int deltaY = r.nextInt(2);
            if (y + deltaY > 0 && y + deltaY < sizeX) {
                y += deltaY;
@@ -72,10 +70,6 @@ public class SimplePacMan extends Observable implements Runnable {
             } catch (InterruptedException ex) {
                 Logger.getLogger(SimplePacMan.class.getName()).log(Level.SEVERE, null, ex);
             }
-           
         }
-    
     }
-    
-    
 }
