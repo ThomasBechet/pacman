@@ -62,21 +62,21 @@ public class SimpleVC extends Application {
                         /* if (spm.getX() == i && spm.getY() == j) { // spm est à la position i, j => le dessiner
                             tab[i][j].setImage(imPM);
                         } else { */
-                        if (game.getGrid().getCell(i, j) instanceof Wall) {
+                        /* if (game.getGrid().getCell(i, j) instanceof Wall) {
                             tab[i][j].setImage(imWall);
                         } else if (game.getGrid().getCell(i, j) instanceof Floor) {
                             tab[i][j].setImage(imVide);
                         } else if (game.getGrid().getCell(i, j) instanceof Door) {
                             tab[i][j].setImage(imDoor);
-                        }
+                        } */
                         // }
                     }
                 }    
             }
         };
 
-        game.addObserver(o);
-        game.start(); // on démarre spm
+        // game.addObserver(o);
+        // game.start(); // on démarre spm
         
         StackPane root = new StackPane();
         root.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));

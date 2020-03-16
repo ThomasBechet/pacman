@@ -1,47 +1,52 @@
 package Model;
 
+import java.nio.file.Path;
 import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Game extends Observable implements Runnable {
+public class Game {
     private Grid grid;
-    public Game () {
-        grid = new Grid();
+    private GameState gameState = GameState.STOPPED;
+    private CellListener cellListener;
+    private EntityListener entityListener;
+    private GameStateListener gameStateListener;
+    private Sequencer sequencer;
+
+    public void setCellListener(CellListener cellListener) {
+        this.cellListener = cellListener;
     }
 
-    public Grid getGrid() {
-        return grid;
+    public void setEntityListener(EntityListener entityListener) {
+        this.entityListener = entityListener;
+    }
+
+    public void setGameStateListener(GameStateListener gameStateListener) {
+        this.gameStateListener = gameStateListener;
+    }
+
+    public void loadMap(Path file) {
+        this.grid = new Grid(file, this.cellListener, this.entityListener);
+    }
+
+    public void setPacmanController(PacmanController controller, int controllerIndex) {
+
     }
 
     public void start() {
-        new Thread(this).start();
+        this.sequencer = new Sequencer(grid.getEntities());
+        this.sequencer.start();
     }
 
-    @Override
-    public void run() {
-        while(true) { // spm descent dasn la grille à chaque pas de temps
-            // int deltaX = r.nextInt(2);
+    public void pause() {
 
-            /* if (x + deltaX > 0 && x + deltaX < sizeX) {
-                x += deltaX;
-            }
+    }
 
-            int deltaY = r.nextInt(2);
-            if (y + deltaY > 0 && y + deltaY < sizeX) {
-                y += deltaY;
-            }
+    public void resume() {
 
-            //System.out.println(x + " - " + y);
-            */
-            setChanged();
-            notifyObservers(); // notification de l'observer
-            
-            try {
-                Thread.sleep(300); // pause
-            } catch (InterruptedException ex) {
-                Logger.getLogger(SimplePacMan.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+    }
+
+    public void stop() {
+
     }
 }
