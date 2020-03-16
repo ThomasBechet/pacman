@@ -7,6 +7,7 @@ package ViewController;
 
 import Model.*;
 
+import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -16,6 +17,7 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -31,6 +33,7 @@ public class SimpleVC extends Application {
     @Override
     public void start(Stage primaryStage) {
         Game game = new Game();
+        game.loadMap("src/map1.txt");
         // SimplePacMan spm = new SimplePacMan(SIZE_X, SIZE_Y); // initialisation du modèle
         
         GridPane grid = new GridPane(); // création de la grille
@@ -53,7 +56,24 @@ public class SimpleVC extends Application {
                 grid.add(img, i, j);
             }
         }
-        
+
+        for (int i = 0; i < SIZE_X; i++) { // rafraichissement graphique
+            for (int j = 0; j < SIZE_Y; j++) {
+                        /* if (spm.getX() == i && spm.getY() == j) { // spm est à la position i, j => le dessiner
+                            tab[i][j].setImage(imPM);
+                        } else { */
+                         if (game.getGrid().cellAt(new Point(i, j)) instanceof Wall) {
+                            tab[i][j].setImage(imWall);
+                        } else if (game.getGrid().cellAt(new Point(i, j)) instanceof Floor) {
+                            tab[i][j].setImage(imVide);
+                        } else if (game.getGrid().cellAt(new Point(i, j)) instanceof Door) {
+                            tab[i][j].setImage(imDoor);
+                        }
+                // }
+            }
+        }
+        tab[(int) (game.getGrid().getPacmanPosition(0).getX())][(int) (game.getGrid().getPacmanPosition(0).getY())].setImage(imPM);
+
         Observer o =  new Observer() { // l'observer observe l'obervable (update est exécuté dès notifyObservers() est appelé côté modèle )
             @Override
             public void update(Observable o, Object arg) {
@@ -94,9 +114,16 @@ public class SimpleVC extends Application {
                 if (event.isShiftDown()) {
                     // spm.initXY(); // si on clique sur shift, on remet spm en haut à gauche
                 }
+                if (event.getCode() == KeyCode.Q) {
+                    if (game.getGrid().canMove(game.getGrid().getPacmanByController(0), Direction.LEFT)) {
+                        tab[(int) (game.getGrid().getPacmanPosition(0).getX())][(int) (game.getGrid().getPacmanPosition(0).getY())].setImage(imVide);
+                        game.getGrid().move(game.getGrid().getPacmanByController(0), Direction.LEFT);
+                    }
+                }
+                tab[(int) (game.getGrid().getPacmanPosition(0).getX())][(int) (game.getGrid().getPacmanPosition(0).getY())].setImage(imPM);
             }
         });
-        
+
         grid.requestFocus();
     }
 

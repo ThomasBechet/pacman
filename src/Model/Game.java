@@ -25,7 +25,7 @@ public class Game {
         this.gameStateListener = gameStateListener;
     }
 
-    public void loadMap(Path file) {
+    public void loadMap(String file) {
         this.grid = new Grid(file, this.cellListener, this.entityListener);
     }
 
@@ -48,5 +48,9 @@ public class Game {
 
     public void stop() {
 
+    }
+
+    public Grid getGrid() {
+        return grid;
     }
 }

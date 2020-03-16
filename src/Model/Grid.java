@@ -4,6 +4,7 @@ import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Grid {
@@ -14,14 +15,16 @@ public class Grid {
     private CellListener cellListener;
     private EntityListener entityListener;
 
-    public Grid(Path file, CellListener cellListener, EntityListener entityListener) {
+    public Grid(String file, CellListener cellListener, EntityListener entityListener) {
         this.cellListener = cellListener;
         this.entityListener = entityListener;
+        this.positions = new HashMap<Entity, Point>();
+        this.controllers = new HashMap<Integer, Pacman>();
 
         cells = new Cell[21][21];
         int i = 0;
         int j;
-        try(BufferedReader br = new BufferedReader(new FileReader("src/map1.txt"))) {
+        try(BufferedReader br = new BufferedReader(new FileReader(file))) {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
 
@@ -49,29 +52,40 @@ public class Grid {
                 System.out.println("  ");
             }
             String everything = sb.toString();
+
+            Pacman p0 = new Pacman(this, 3);
+            controllers.put(0, p0);
+            positions.put(p0, new Point(10, 15));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+        System.out.println("Fin de l'init");
     }
 
     public boolean canMove(Entity entity, Direction direction) {
-        return false;
+        return true;
     }
 
     public void move(Entity entity, Direction direction) {
-
+        Point point = positions.get(entity);
+        switch (direction) {
+            case LEFT:
+                point.setLocation(point.getX() - 1, point.getY());
+                break;
+        }
+        positions.replace(entity, point);
     }
 
     public Cell cellAt(Point position) {
-        return null;
+        return cells[(int) (position.getX())][(int) (position.getY())];
     }
 
     public Point getPacmanPosition(int controller) {
-        return null;
+        return positions.get(controllers.get(controller));
     }
 
     public Pacman getPacmanByController(int controller) {
-        return null;
+        return controllers.get(controller);
     }
 
     public Entity[] getEntities() {
