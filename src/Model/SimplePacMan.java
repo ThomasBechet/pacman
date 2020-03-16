@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Modele;
+package Model;
 
 import java.util.Observable;
 import java.util.Random;
@@ -23,6 +23,8 @@ public class SimplePacMan extends Observable implements Runnable {
     
     public SimplePacMan(int sizeX, int sizeY) {
         this.r = new Random();
+
+        // new Game();
 
         this.x = 0;
         this.y = 0;
