@@ -58,7 +58,6 @@ public class SimpleVC extends Application {
 
                 }
 
-                imageView.toFront();
                 imageView.setTranslateX(position.x * 18.0f);
                 imageView.setTranslateY(position.y * 19.0f);
 
@@ -70,9 +69,14 @@ public class SimpleVC extends Application {
             }
         });
 
-        game.loadMap("src/Maps/map_old.txt");
+        game.loadMap("src/Maps/map1.txt");
         PacmanController pacmanController = new PacmanController();
         game.setPacmanController(pacmanController, PacmanController.PLAYER_1);
+
+        for (ImageView image : images.values()) {
+            image.toFront();
+        }
+
         game.start();
 
         Scene scene = new Scene(root);

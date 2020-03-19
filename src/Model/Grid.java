@@ -116,17 +116,34 @@ public class Grid {
                 j = 0;
                 for (char ch : line.toCharArray()) {
                     System.out.print(ch);
-                    switch (ch) {
-                        case 'W':
-                            cells[j][i] = new Wall();
-                            break;
-                        case 'F':
-                            cells[j][i] = new Floor(new Pacgum(10, PacgumType.BASE));
-                            break;
-                        case 'D':
-                            cells[j][i] = new Door(false);
-                            break;
+                    if (ch == 'W') {
+                        cells[j][i] = new Wall();
+                    } else if (ch == 'F') {
+                        cells[j][i] = new Floor(null);
+                    } else if (ch == 'D') {
+                        cells[j][i] = new Door(false);
+                    } else if (Character.isDigit(ch)) {
+                        cells[j][i] = new Floor(null);
+                        Pacman pacman = new Pacman(this, 3);
+                        Point position = new Point(j, i);
+                        this.addEntity(pacman, position);
+                        controllers.put(0, pacman);
+                    } else if (ch == '.') {
+                        cells[j][i] = new Floor(new Pacgum(10, PacgumType.BASE));
+                    } else if (ch == 'O') {
+                        cells[j][i] = new Floor(new Pacgum(50, PacgumType.SUPER));
+                    } else if (ch == '-') {
+                        cells[j][i] = new Floor(new Pacgum(100, PacgumType.FRUIT));
+                    } else if (ch == 'B') {
+
+                    } else if (ch == 'Y') {
+
+                    } else if (ch == 'R') {
+
+                    } else if (ch == 'P') {
+
                     }
+
                     j++;
                 }
                 sb.append(line);
@@ -136,11 +153,6 @@ public class Grid {
                 System.out.println("  ");
             }
             String everything = sb.toString();
-
-            Pacman p0 = new Pacman(this, 3);
-            Point p0position = new Point(5, 1);
-            this.addEntity(p0, p0position);
-            controllers.put(0, p0);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
