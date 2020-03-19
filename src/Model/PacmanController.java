@@ -13,18 +13,26 @@ public class PacmanController {
     }
 
     public void up() {
-
+        if (this.pacman != null) {
+            this.pacman.setDirection(Direction.UP);
+        }
     }
 
     public void down() {
-
+        if (this.pacman != null) {
+            this.pacman.setDirection(Direction.DOWN);
+        }
     }
 
     public void left() {
-
+        if (this.pacman != null) {
+            this.pacman.setDirection(Direction.LEFT);
+        }
     }
 
     public void right() {
-
+        if (this.pacman != null) {
+            this.pacman.setDirection(Direction.RIGHT);
+        }
     }
 }

@@ -1,7 +1,8 @@
 package Model;
 
 public class Pacman extends Entity {
-    private Direction direction;
+    private Direction direction = Direction.LEFT;
+    private Direction wantedDirection = this.direction;
     private int lifes;
     private int score;
 
@@ -17,7 +18,7 @@ public class Pacman extends Entity {
     }
 
     public void setDirection(Direction direction) {
-        this.direction = direction;
+        this.wantedDirection = direction;
     }
 
     public int getLifeCount() {
@@ -44,6 +45,9 @@ public class Pacman extends Entity {
 
     @Override
     public void update() {
-
+        if (grid.canMove(this, this.wantedDirection)) {
+            this.direction = this.wantedDirection;
+        }
+        grid.move(this, this.direction);
     }
 }

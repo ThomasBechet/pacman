@@ -13,6 +13,6 @@ public class Ghost extends Entity {
 
     @Override
     public void update() {
-
+        // Do nothing
     }
 }

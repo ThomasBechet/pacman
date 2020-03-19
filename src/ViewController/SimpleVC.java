@@ -8,8 +8,8 @@ package ViewController;
 import Model.*;
 
 import java.awt.*;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.HashMap;
+import java.util.Map;
 
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
@@ -20,7 +20,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.scene.shape.*;
+import javafx.stage.WindowEvent;
 
 /**
  *
@@ -32,20 +35,12 @@ public class SimpleVC extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-        Game game = new Game();
-        game.loadMap("src/map1.txt");
-        // SimplePacMan spm = new SimplePacMan(SIZE_X, SIZE_Y); // initialisation du modèle
-        
         GridPane grid = new GridPane(); // création de la grille
-        
-        // Pacman.svg.png
+
         Image imPM = new Image("Pacman.png"); // préparation des images
         Image imVide = new Image("Vide.png");
         Image imWall = new Image("mur.png");
         Image imDoor = new Image("Door.png");
-
-        //img.setScaleY(0.01);
-        //img.setScaleX(0.01);
         
         ImageView[][] tab = new ImageView[SIZE_X][SIZE_Y]; // tableau permettant de récupérer les cases graphiques lors du rafraichissement
 
@@ -57,53 +52,54 @@ public class SimpleVC extends Application {
             }
         }
 
-        for (int i = 0; i < SIZE_X; i++) { // rafraichissement graphique
-            for (int j = 0; j < SIZE_Y; j++) {
-                        /* if (spm.getX() == i && spm.getY() == j) { // spm est à la position i, j => le dessiner
-                            tab[i][j].setImage(imPM);
-                        } else { */
-                         if (game.getGrid().cellAt(new Point(i, j)) instanceof Wall) {
-                            tab[i][j].setImage(imWall);
-                        } else if (game.getGrid().cellAt(new Point(i, j)) instanceof Floor) {
-                            tab[i][j].setImage(imVide);
-                        } else if (game.getGrid().cellAt(new Point(i, j)) instanceof Door) {
-                            tab[i][j].setImage(imDoor);
-                        }
-                // }
-            }
-        }
-        tab[(int) (game.getGrid().getPacmanPosition(0).getX())][(int) (game.getGrid().getPacmanPosition(0).getY())].setImage(imPM);
-
-        Observer o =  new Observer() { // l'observer observe l'obervable (update est exécuté dès notifyObservers() est appelé côté modèle )
-            @Override
-            public void update(Observable o, Object arg) {
-                for (int i = 0; i < SIZE_X; i++) { // rafraichissement graphique
-                    for (int j = 0; j < SIZE_Y; j++) {
-                        /* if (spm.getX() == i && spm.getY() == j) { // spm est à la position i, j => le dessiner
-                            tab[i][j].setImage(imPM);
-                        } else { */
-                        /* if (game.getGrid().getCell(i, j) instanceof Wall) {
-                            tab[i][j].setImage(imWall);
-                        } else if (game.getGrid().getCell(i, j) instanceof Floor) {
-                            tab[i][j].setImage(imVide);
-                        } else if (game.getGrid().getCell(i, j) instanceof Door) {
-                            tab[i][j].setImage(imDoor);
-                        } */
-                        // }
-                    }
-                }    
-            }
-        };
-
-        // game.addObserver(o);
-        // game.start(); // on démarre spm
-        
         StackPane root = new StackPane();
         root.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
         root.getChildren().add(grid);
-        
+
+        Game game = new Game();
+
+        game.setCellListener(new CellListener() {
+            @Override
+            public void cellUpdated(Cell cell, Point position) {
+                if (cell instanceof  Wall) {
+                    tab[position.x][position.y].setImage(imWall);
+                } else if (cell instanceof Floor) {
+                    tab[position.x][position.y].setImage(imVide);
+                } else if (cell instanceof  Door) {
+                    tab[position.x][position.y].setImage(imDoor);
+                }
+            }
+        });
+
+        Map<Entity, ImageView> images = new HashMap<>();
+
+        game.setEntityListener(new EntityListener() {
+            @Override
+            public void entityUpdated(Entity entity, Point position) {
+                ImageView imageView = images.get(entity);
+                if (imageView == null) {
+                    imageView = new ImageView();
+                    grid.getChildren().add(imageView);
+                    images.put(entity, imageView);
+                }
+
+                imageView.setTranslateX(position.x * 18.0f);
+                imageView.setTranslateY(position.y * 19.0f);
+
+                if (entity instanceof Pacman) {
+                    imageView.setImage(imPM);
+                } else if (entity instanceof Ghost) {
+                    // TODO
+                }
+            }
+        });
+
+        game.loadMap("src/map1.txt");
+        PacmanController pacmanController = new PacmanController();
+        game.setPacmanController(pacmanController, PacmanController.PLAYER_1);
+        game.start();
+
         Scene scene = new Scene(root);
-        
         primaryStage.setTitle("Hello World!");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -111,20 +107,26 @@ public class SimpleVC extends Application {
         root.setOnKeyPressed(new EventHandler<javafx.scene.input.KeyEvent>() { // on écoute le clavier
             @Override
             public void handle(javafx.scene.input.KeyEvent event) {
-                if (event.isShiftDown()) {
-                    // spm.initXY(); // si on clique sur shift, on remet spm en haut à gauche
+                KeyCode code = event.getCode();
+                if (code == KeyCode.Q || code == KeyCode.LEFT) {
+                    pacmanController.left();
+                } else if (code == KeyCode.D || code == KeyCode.RIGHT) {
+                    pacmanController.right();
+                } else if (code == KeyCode.Z || code == KeyCode.UP) {
+                    pacmanController.up();
+                } else if (code == KeyCode.S || code == KeyCode.DOWN) {
+                    pacmanController.down();
                 }
-                if (event.getCode() == KeyCode.Q) {
-                    if (game.getGrid().canMove(game.getGrid().getPacmanByController(0), Direction.LEFT)) {
-                        tab[(int) (game.getGrid().getPacmanPosition(0).getX())][(int) (game.getGrid().getPacmanPosition(0).getY())].setImage(imVide);
-                        game.getGrid().move(game.getGrid().getPacmanByController(0), Direction.LEFT);
-                    }
-                }
-                tab[(int) (game.getGrid().getPacmanPosition(0).getX())][(int) (game.getGrid().getPacmanPosition(0).getY())].setImage(imPM);
             }
         });
 
         grid.requestFocus();
+
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+                game.stop();
+            }
+        });
     }
 
     /**
