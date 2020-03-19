@@ -36,50 +36,14 @@ public class Grid {
     public boolean canMove(Entity entity, Direction direction) {
         Point position = this.positions.get(entity);
         position = (Point)position.clone();
-        switch (direction) {
-            case UP:
-                position.y--;
-                break;
-            case DOWN:
-                position.y++;
-                break;
-            case LEFT:
-                position.x--;
-                break;
-            case RIGHT:
-                position.x++;
-                break;
-            default:
-                break;
-        }
-
-        if (position.x >= this.cells.length || position.x < 0 || position.y >= this.cells[0].length || position.y < 0) {
-            return false;
-        }
-
-        return !(this.cellAt(position) instanceof Wall);
+        this.applyDirection(position, direction);
+        return this.isWalkable(this.cells[position.x][position.y]);
     }
 
     public void move(Entity entity, Direction direction) {
         if (this.canMove(entity, direction)) {
             Point point = positions.get(entity);
-            switch (direction) {
-                case UP:
-                    point.y--;
-                    break;
-                case DOWN:
-                    point.y++;
-                    break;
-                case LEFT:
-                    point.x--;
-                    break;
-                case RIGHT:
-                    point.x++;
-                    break;
-                default:
-                    break;
-            }
-
+            this.applyDirection(point, direction);
             this.entityListener.entityUpdated(entity, point);
         }
     }
@@ -170,5 +134,37 @@ public class Grid {
         if (this.controllers.containsValue(entity)) {
             this.controllers.remove(this.controllers.get(entity));
         }
+    }
+
+    private void applyDirection(Point point, Direction direction) {
+        switch (direction) {
+            case UP:
+                point.y--;
+                break;
+            case DOWN:
+                point.y++;
+                break;
+            case LEFT:
+                point.x--;
+                break;
+            case RIGHT:
+                point.x++;
+                break;
+            default:
+                break;
+        }
+
+        if (point.x >= this.cells.length) {
+            point.x = 0;
+        } else if (point.x < 0) {
+            point.x = this.cells.length - 1;
+        } else if (point.y >= this.cells[0].length) {
+            point.y = 0;
+        } else if (point.y < 0) {
+            point.y = this.cells[0].length - 1;
+        }
+    }
+    private boolean isWalkable(Cell cell) {
+        return !(cell instanceof Wall || cell instanceof Door);
     }
 }
