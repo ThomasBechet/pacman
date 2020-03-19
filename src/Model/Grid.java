@@ -17,7 +17,7 @@ public class Grid {
     private CellListener cellListener;
     private EntityListener entityListener;
 
-    public Grid(String file, CellListener cellListener, EntityListener entityListener) {
+    public Grid(String file, CellListener cellListener, EntityListener entityListener, MapListener mapListener) {
         this.cellListener = cellListener;
         this.entityListener = entityListener;
         this.entities = new ArrayList<Entity>();
@@ -25,6 +25,8 @@ public class Grid {
         this.controllers = new HashMap<Integer, Pacman>();
 
         this.loadMap(file);
+
+        mapListener.mapUpdated(this.cells);
     }
 
     public void setupPacmanController(PacmanController controller, int index) {
@@ -34,7 +36,6 @@ public class Grid {
     public boolean canMove(Entity entity, Direction direction) {
         Point position = this.positions.get(entity);
         position = (Point)position.clone();
-        System.out.println(position);
         switch (direction) {
             case UP:
                 position.y--;
@@ -142,16 +143,6 @@ public class Grid {
             controllers.put(0, p0);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-        }
-
-        this.refreshAllCells();
-    }
-
-    private void refreshAllCells() {
-        for (int x = 0; x < this.cells.length; x++) {
-            for (int y = 0; y < this.cells[x].length; y++) {
-                this.cellListener.cellUpdated(this.cells[x][y], new Point(x, y));
-            }
         }
     }
 
