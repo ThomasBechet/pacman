@@ -35,6 +35,7 @@ public class SimpleVC extends Application {
     @Override
     public void start(Stage primaryStage) {
         Image imagePacman = new Image("Images/Pacman.png");
+        Image imageGhost = new Image("Images/DoorBlue.png");
 
         StackPane root = new StackPane();
         GridPane grid = new GridPane();
@@ -64,6 +65,7 @@ public class SimpleVC extends Application {
                 if (entity instanceof Pacman) {
                     imageView.setImage(imagePacman);
                 } else if (entity instanceof Ghost) {
+                    // imageView.setImage(imageGhost);
                     // TODO
                 }
             }
