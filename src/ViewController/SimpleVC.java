@@ -35,8 +35,10 @@ public class SimpleVC extends Application {
     public void start(Stage primaryStage) {
         GridPane grid = new GridPane(); // création de la grille
 
-        Image imagePacman = new Image("Images/Pacman.png"); // préparation des images
+        Image imagePacman = new Image("Images/Pacman.png");
         Image imageFloor = new Image("Images/Floor.png");
+        Image imageFloorPacgumBase = new Image("Images/FloorPacgumBase.png");
+        Image imageFloorPacgumFruit = new Image("Images/FloorPacgumFruit.png");
         Image imageWall = new Image("Images/Wall.png");
         Image imageDoor = new Image("Images/Door.png");
         
@@ -92,7 +94,7 @@ public class SimpleVC extends Application {
             }
         });
 
-        game.loadMap("src/map1.txt");
+        game.loadMap("src/Maps/map1.txt");
         PacmanController pacmanController = new PacmanController();
         game.setPacmanController(pacmanController, PacmanController.PLAYER_1);
         game.start();
