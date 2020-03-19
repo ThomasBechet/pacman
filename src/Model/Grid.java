@@ -46,20 +46,9 @@ public class Grid {
             this.applyDirection(point, direction);
             Cell curCell = this.cellAt(point);
             if (curCell instanceof Floor && entity instanceof Pacman) {
-                if (((Floor) curCell).hasPacgum()) {
-                    switch (((Floor) curCell).getPacgum().getType()) {
-                        case BASE:
-                            ((Pacman) entity).addScore(10);
-                            break;
-                        case SUPER:
-                            ((Pacman) entity).addScore(50);
-                            break;
-                        case FRUIT:
-                            ((Pacman) entity).addScore(100);
-                            break;
-                    }
-                    ((Floor) curCell).removePacgum();
-                    System.out.println(((Pacman) entity).getScore());
+                if (((Floor)curCell).hasPacgum()) {
+                    ((Pacman)entity).addScore(((Floor)curCell).getPacgum().getValue());
+                    ((Floor)curCell).removePacgum();
                     this.cellListener.cellUpdated(curCell, point);
                 }
             }

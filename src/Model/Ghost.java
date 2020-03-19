@@ -4,11 +4,9 @@ import java.awt.*;
 
 public class Ghost extends Entity {
     private Direction direction;
-    private Color color;
 
-    public Ghost(Grid grid, Color color) {
+    public Ghost(Grid grid) {
         super(grid);
-        this.color = color;
     }
 
     public Direction getDirection() {
