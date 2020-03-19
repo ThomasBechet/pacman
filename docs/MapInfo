@@ -1,0 +1,11 @@
+W => Wall
+F => Floor
+D => Door
+nombre => Spawn
+. => simple pacgum
+O => super pacgum
+- => Fruit
+B => blue ghost
+Y => yellow ghost
+R => red ghost
+P => pink ghost
