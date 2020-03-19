@@ -20,9 +20,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.scene.shape.*;
 import javafx.stage.WindowEvent;
 
 /**
@@ -37,10 +35,10 @@ public class SimpleVC extends Application {
     public void start(Stage primaryStage) {
         GridPane grid = new GridPane(); // création de la grille
 
-        Image imPM = new Image("Pacman.png"); // préparation des images
-        Image imVide = new Image("Vide.png");
-        Image imWall = new Image("mur.png");
-        Image imDoor = new Image("Door.png");
+        Image imagePacman = new Image("Images/Pacman.png"); // préparation des images
+        Image imageFloor = new Image("Images/Floor.png");
+        Image imageWall = new Image("Images/Wall.png");
+        Image imageDoor = new Image("Images/Door.png");
         
         ImageView[][] tab = new ImageView[SIZE_X][SIZE_Y]; // tableau permettant de récupérer les cases graphiques lors du rafraichissement
 
@@ -62,11 +60,11 @@ public class SimpleVC extends Application {
             @Override
             public void cellUpdated(Cell cell, Point position) {
                 if (cell instanceof  Wall) {
-                    tab[position.x][position.y].setImage(imWall);
+                    tab[position.x][position.y].setImage(imageWall);
                 } else if (cell instanceof Floor) {
-                    tab[position.x][position.y].setImage(imVide);
+                    tab[position.x][position.y].setImage(imageFloor);
                 } else if (cell instanceof  Door) {
-                    tab[position.x][position.y].setImage(imDoor);
+                    tab[position.x][position.y].setImage(imageDoor);
                 }
             }
         });
@@ -87,7 +85,7 @@ public class SimpleVC extends Application {
                 imageView.setTranslateY(position.y * 19.0f);
 
                 if (entity instanceof Pacman) {
-                    imageView.setImage(imPM);
+                    imageView.setImage(imagePacman);
                 } else if (entity instanceof Ghost) {
                     // TODO
                 }
