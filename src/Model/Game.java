@@ -12,6 +12,7 @@ public class Game {
     private CellListener cellListener;
     private EntityListener entityListener;
     private GameStateListener gameStateListener;
+    private MapListener mapListener;
 
     public void setCellListener(CellListener cellListener) {
         this.cellListener = cellListener;
@@ -22,10 +23,13 @@ public class Game {
     public void setGameStateListener(GameStateListener gameStateListener) {
         this.gameStateListener = gameStateListener;
     }
+    public void setMapListener(MapListener mapListener) {
+        this.mapListener = mapListener;
+    }
 
     public void loadMap(String file) {
         if (this.gameState == GameState.STOPPED) {
-            this.grid = new Grid(file, this.cellListener, this.entityListener);
+            this.grid = new Grid(file, this.cellListener, this.entityListener, this.mapListener);
         }
     }
 

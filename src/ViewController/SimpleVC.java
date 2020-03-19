@@ -8,10 +8,13 @@ package ViewController;
 import Model.*;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -28,47 +31,19 @@ import javafx.stage.WindowEvent;
  * @author frederic.armetta
  */
 public class SimpleVC extends Application {
-    public final int SIZE_X = 21;
-    public final int SIZE_Y = 21;
-    
+
     @Override
     public void start(Stage primaryStage) {
-        GridPane grid = new GridPane(); // création de la grille
-
-        Image imagePacman = new Image("Images/Pacman.png"); // préparation des images
-        Image imageFloor = new Image("Images/Floor.png");
-        Image imageWall = new Image("Images/Wall.png");
-        Image imageDoor = new Image("Images/Door.png");
-        
-        ImageView[][] tab = new ImageView[SIZE_X][SIZE_Y]; // tableau permettant de récupérer les cases graphiques lors du rafraichissement
-
-        for (int i = 0; i < SIZE_X; i++) { // initialisation de la grille (sans image)
-            for (int j = 0; j < SIZE_Y; j++) {
-                ImageView img = new ImageView();
-                tab[i][j] = img;
-                grid.add(img, i, j);
-            }
-        }
+        Image imagePacman = new Image("Images/Pacman.png");
 
         StackPane root = new StackPane();
+        GridPane grid = new GridPane();
         root.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
         root.getChildren().add(grid);
 
         Game game = new Game();
 
-        game.setCellListener(new CellListener() {
-            @Override
-            public void cellUpdated(Cell cell, Point position) {
-                if (cell instanceof  Wall) {
-                    tab[position.x][position.y].setImage(imageWall);
-                } else if (cell instanceof Floor) {
-                    tab[position.x][position.y].setImage(imageFloor);
-                } else if (cell instanceof  Door) {
-                    tab[position.x][position.y].setImage(imageDoor);
-                }
-            }
-        });
-
+        CellGrid cellGrid = new CellGrid(game, grid);
         Map<Entity, ImageView> images = new HashMap<>();
 
         game.setEntityListener(new EntityListener() {
@@ -79,6 +54,8 @@ public class SimpleVC extends Application {
                     imageView = new ImageView();
                     grid.getChildren().add(imageView);
                     images.put(entity, imageView);
+                    imageView.toBack();
+
                 }
 
                 imageView.setTranslateX(position.x * 18.0f);
@@ -92,9 +69,14 @@ public class SimpleVC extends Application {
             }
         });
 
-        game.loadMap("src/map1.txt");
+        game.loadMap("src/Maps/map1.txt");
         PacmanController pacmanController = new PacmanController();
         game.setPacmanController(pacmanController, PacmanController.PLAYER_1);
+
+        for (ImageView image : images.values()) {
+            image.toFront();
+        }
+
         game.start();
 
         Scene scene = new Scene(root);
