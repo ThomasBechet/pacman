@@ -1,14 +1,21 @@
 package Model;
 
+import javafx.util.Duration;
+
+import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Sequencer implements Runnable {
     private Thread thread;
     private List<Entity> entities;
+    private Map<MovableEntity, Duration> movableEntities;
     private volatile boolean running;
 
     public Sequencer(List<Entity> entities) {
         this.entities = entities;
+        this.movableEntities = new HashMap<>();
         this.running = false;
     }
 
@@ -31,14 +38,44 @@ public class Sequencer implements Runnable {
 
     @Override
     public void run() {
+        Instant lastTime = Instant.now();
+
         while(this.running) {
+
+            Instant current = Instant.now();
+            long timeElapsed = java.time.Duration.between(lastTime, current).toMillis();
+
             for(Entity entity : this.entities) {
-                entity.update();
+                if (entity instanceof MovableEntity) {
+
+                    // Handle entity creation
+                    MovableEntity movableEntity = (MovableEntity)entity;
+                    Duration duration = this.movableEntities.get(movableEntity);
+                    if (duration == null) {
+                        this.movableEntities.put(movableEntity, new Duration(0));
+                        duration = this.movableEntities.get(movableEntity);
+                    }
+
+                    // Update movable entities if needed
+                    this.movableEntities.replace(movableEntity, new Duration(duration.toMillis() + timeElapsed));
+                    if (duration.greaterThanOrEqualTo(new Duration(movableEntity.getSpeed()))) {
+                        entity.update();
+                        this.movableEntities.replace(movableEntity, new Duration(0));
+                    }
+
+                } else {
+
+                    // Other entities are simply updated
+                    entity.update();
+
+                }
             }
 
             try {
-                Thread.sleep(300);
+                Thread.sleep(5); // Required to reduce loop lag introduced by a zero deltatime
             } catch(InterruptedException exception) {  }
+
+            lastTime = current;
         }
     }
 }

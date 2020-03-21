@@ -7,19 +7,11 @@ package ViewController;
 
 import Model.*;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -34,55 +26,25 @@ public class SimpleVC extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Image imagePacman = new Image("Images/Pacman.png");
-        Image imageGhost = new Image("Images/DoorBlue.png");
-
         StackPane root = new StackPane();
-        GridPane grid = new GridPane();
         root.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
-        root.getChildren().add(grid);
 
         Game game = new Game();
 
-        CellGrid cellGrid = new CellGrid(game, grid);
-        Map<Entity, ImageView> images = new HashMap<>();
-
-        game.setEntityListener(new EntityListener() {
-            @Override
-            public void entityUpdated(Entity entity, Point position) {
-                ImageView imageView = images.get(entity);
-                if (imageView == null) {
-                    imageView = new ImageView();
-                    grid.getChildren().add(imageView);
-                    images.put(entity, imageView);
-                    imageView.toBack();
-
-                }
-
-                imageView.setTranslateX(position.x * 18.0f);
-                imageView.setTranslateY(position.y * 19.0f);
-
-                if (entity instanceof Pacman) {
-                    imageView.setImage(imagePacman);
-                } else if (entity instanceof Ghost) {
-                    // imageView.setImage(imageGhost);
-                    // TODO
-                }
-            }
-        });
+        CellLayer cellLayer = new CellLayer(root);
+        game.setMapListener(cellLayer);
+        game.setCellListener(cellLayer);
+        EntityLayer entityLayer = new EntityLayer(cellLayer);
+        game.setEntityListener(entityLayer);
 
         game.loadMap("src/Maps/map1.txt");
-        PacmanController pacmanController = new PacmanController();
-        game.setPacmanController(pacmanController, PacmanController.PLAYER_1);
-
-        for (ImageView image : images.values()) {
-            image.toFront();
-        }
+        PacmanController player1 = new PacmanController();
+        game.setPacmanController(player1, PacmanController.PLAYER_1);
 
         game.start();
 
         Scene scene = new Scene(root);
-        primaryStage.setTitle("Hello World!");
+        primaryStage.setTitle("Pacman est un très Beaujeu !");
         primaryStage.setScene(scene);
         primaryStage.show();
         
@@ -91,18 +53,18 @@ public class SimpleVC extends Application {
             public void handle(javafx.scene.input.KeyEvent event) {
                 KeyCode code = event.getCode();
                 if (code == KeyCode.Q || code == KeyCode.LEFT) {
-                    pacmanController.left();
+                    player1.left();
                 } else if (code == KeyCode.D || code == KeyCode.RIGHT) {
-                    pacmanController.right();
+                    player1.right();
                 } else if (code == KeyCode.Z || code == KeyCode.UP) {
-                    pacmanController.up();
+                    player1.up();
                 } else if (code == KeyCode.S || code == KeyCode.DOWN) {
-                    pacmanController.down();
+                    player1.down();
                 }
             }
         });
 
-        grid.requestFocus();
+        root.requestFocus();
 
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {

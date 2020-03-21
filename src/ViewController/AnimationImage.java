@@ -10,16 +10,16 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
-public class AnimatedSprite extends ImageView {
-    private Direction direction;
+public class AnimationImage extends ImageView {
     private int currentFrame;
     private int length;
+    private int index;
 
-    public AnimatedSprite(Image image, int length) {
+    public AnimationImage(Image image) {
         super(image);
-        this.direction = Direction.LEFT;
         this.currentFrame = 0;
-        this.length = length;
+        this.length = (int)image.getWidth() / 20;
+        this.index = 0;
 
         this.updateFrame();
 
@@ -32,23 +32,16 @@ public class AnimatedSprite extends ImageView {
             }
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.setAutoReverse(false);
         timeline.play();
     }
 
-    public void setDirection(Direction direction) {
-        this.direction = direction;
+    public void setIndex(int index) {
+        this.index = index;
         this.updateFrame();
     }
 
     private void updateFrame() {
-        if (direction == Direction.RIGHT) {
-            this.setViewport(new Rectangle2D(this.currentFrame * 20, 0, 20, 20));
-        } else if (direction == Direction.DOWN) {
-            this.setViewport(new Rectangle2D(this.currentFrame * 20, 20, 20, 20));
-        } else if (direction == Direction.LEFT) {
-            this.setViewport(new Rectangle2D(this.currentFrame * 20, 40, 20, 20));
-        } else if (direction == Direction.UP) {
-            this.setViewport(new Rectangle2D(this.currentFrame * 20, 60, 20, 20));
-        }
+        this.setViewport(new Rectangle2D(this.currentFrame * 20, this.index * 20, 20, 20));
     }
 }

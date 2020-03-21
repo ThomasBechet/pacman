@@ -1,23 +1,19 @@
 package Model;
 
-public class Pacman extends Entity {
-    private Direction direction = Direction.LEFT;
-    private Direction wantedDirection = this.direction;
+public class Pacman extends MovableEntity {
+    private Direction wantedDirection;
     private int lifes;
     private int score;
 
     public Pacman(Grid grid, int lifeCount) {
         super(grid);
 
+        this.wantedDirection = this.getDirection();
         this.lifes = lifeCount;
         this.score = 0;
     }
 
-    public Direction getDirection() {
-        return this.direction;
-    }
-
-    public void setDirection(Direction direction) {
+    public void setWantedDirection(Direction direction) {
         this.wantedDirection = direction;
     }
 
@@ -44,10 +40,9 @@ public class Pacman extends Entity {
     }
 
     @Override
-    public void update() {
-        if (grid.canMove(this, this.wantedDirection)) {
-            this.direction = this.wantedDirection;
+    public void tick() {
+        if (this.grid.canMove(this, this.wantedDirection)) {
+            this.setDirection(this.wantedDirection);
         }
-        grid.move(this, this.direction);
     }
 }
