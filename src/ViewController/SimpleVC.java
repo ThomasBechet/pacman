@@ -37,7 +37,7 @@ public class SimpleVC extends Application {
         EntityLayer entityLayer = new EntityLayer(cellLayer);
         game.setEntityListener(entityLayer);
 
-        game.loadMap("src/Maps/map1.txt");
+        game.loadMap("src/Maps/runway.txt");
         PacmanController player1 = new PacmanController();
         game.setPacmanController(player1, PacmanController.PLAYER_1);
 
@@ -60,6 +60,10 @@ public class SimpleVC extends Application {
                     player1.up();
                 } else if (code == KeyCode.S || code == KeyCode.DOWN) {
                     player1.down();
+                } else if (code == KeyCode.X) {
+                    player1.inceaseSpeed();
+                } else if (code == KeyCode.W) {
+                    player1.decreaseSpeed();
                 }
             }
         });

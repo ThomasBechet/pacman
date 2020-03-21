@@ -35,4 +35,15 @@ public class PacmanController {
             this.pacman.setWantedDirection(Direction.RIGHT);
         }
     }
+
+    public void inceaseSpeed() {
+        if (this.pacman != null) {
+            if (this.pacman.getSpeed() >= 100) this.pacman.setSpeed(this.pacman.getSpeed() - 50);
+        }
+    }
+    public void decreaseSpeed() {
+        if (this.pacman != null) {
+            if (this.pacman.getSpeed() <= 500) this.pacman.setSpeed(this.pacman.getSpeed() + 50);
+        }
+    }
 }
