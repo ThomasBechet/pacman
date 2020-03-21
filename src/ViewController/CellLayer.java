@@ -11,16 +11,14 @@ public class CellGrid implements CellListener, MapListener {
     private ImageView[][] images;
     private GridPane grid;
 
-    private Image imageFloor = new Image("Images/Floor.png");
-    private Image imageFloorPacgumBase = new Image("Images/FloorPacgumBase.png");
-    private Image imageFloorPacgumFruit = new Image("Images/FloorPacgumFruit.png");
-    private Image imageFloorPacgumSuper = new Image("Images/FloorPacgumSuper.png");
-    private Image imageWall = new Image("Images/Wall.png");
-    private Image imageDoor = new Image("Images/Door.png");
+    private static Image imageFloor = new Image("Images/Floor.png");
+    private static Image imageFloorPacgumBase = new Image("Images/FloorPacgumBase.png");
+    private static Image imageFloorPacgumFruit = new Image("Images/FloorPacgumFruit.png");
+    private static Image imageFloorPacgumSuper = new Image("Images/FloorPacgumSuper.png");
+    private static Image imageWall = new Image("Images/Wall.png");
+    private static Image imageDoor = new Image("Images/Door.png");
 
     public CellGrid(Game game, GridPane grid) {
-        game.setMapListener(this);
-        game.setCellListener(this);
         this.grid = grid;
     }
 
