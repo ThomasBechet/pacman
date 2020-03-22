@@ -1,16 +1,14 @@
 package ViewController;
 
-import Model.Direction;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.*;
 import javafx.util.Duration;
 
-public class AnimationImage extends ImageView {
+public class AnimationImage extends Sprite {
     private int currentFrame;
     private int length;
     private int index;
@@ -18,17 +16,18 @@ public class AnimationImage extends ImageView {
     public AnimationImage(Image image) {
         super(image);
         this.currentFrame = 0;
-        this.length = (int)image.getWidth() / 20;
-        this.index = 0;
 
-        this.updateFrame();
+        this.length = (int)(this.getImage().getWidth() / (Sprite.TILE_SIZE * Sprite.SCALE_FACTOR));
 
         Timeline timeline = new Timeline();
         timeline.getKeyFrames().add(new KeyFrame(new Duration(300), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                currentFrame = (currentFrame + 1) % length;
-                updateFrame();
+                Platform.runLater(() -> {
+                    currentFrame = (currentFrame + 1) % length;
+                    setFrame(currentFrame, index);
+                });
+
             }
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -36,12 +35,8 @@ public class AnimationImage extends ImageView {
         timeline.play();
     }
 
-    public void setIndex(int index) {
+    public synchronized void setIndex(int index) {
         this.index = index;
-        this.updateFrame();
-    }
-
-    private void updateFrame() {
-        this.setViewport(new Rectangle2D(this.currentFrame * 20, this.index * 20, 20, 20));
+        setFrame(currentFrame, index);
     }
 }

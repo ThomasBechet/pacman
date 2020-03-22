@@ -7,10 +7,8 @@ package ViewController;
 
 import Model.*;
 
-import javafx.geometry.Insets;
-import javafx.scene.image.Image;
-import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
@@ -18,16 +16,12 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-/**
- *
- * @author frederic.armetta
- */
-public class SimpleVC extends Application {
+public class Startup extends javafx.application.Application {
 
     @Override
     public void start(Stage primaryStage) {
         StackPane root = new StackPane();
-        root.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+        root.setAlignment(Pos.CENTER);
 
         Game game = new Game();
 
@@ -37,16 +31,11 @@ public class SimpleVC extends Application {
         EntityLayer entityLayer = new EntityLayer(cellLayer);
         game.setEntityListener(entityLayer);
 
-        game.loadMap("src/Maps/runway.txt");
+        game.loadMap("src/Maps/map1.txt");
         PacmanController player1 = new PacmanController();
         game.setPacmanController(player1, PacmanController.PLAYER_1);
 
         game.start();
-
-        Scene scene = new Scene(root);
-        primaryStage.setTitle("Pacman est un très Beaujeu !");
-        primaryStage.setScene(scene);
-        primaryStage.show();
         
         root.setOnKeyPressed(new EventHandler<javafx.scene.input.KeyEvent>() { // on écoute le clavier
             @Override
@@ -68,13 +57,22 @@ public class SimpleVC extends Application {
             }
         });
 
-        root.requestFocus();
-
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
                 game.stop();
             }
         });
+
+        Scene scene = new Scene(root);
+        scene.setFill(Color.BLACK);
+        root.setScaleX(2);
+        root.setScaleY(2);
+        primaryStage.setTitle("Pacman est un très Beaujeu !");
+        primaryStage.setScene(scene);
+        primaryStage.setFullScreen(false);
+        primaryStage.setMaximized(true);
+        primaryStage.show();
+        root.requestFocus();
     }
 
     /**

@@ -1,41 +1,49 @@
 package ViewController;
 
 import Model.*;
-import javafx.scene.image.ImageView;
+import javafx.geometry.Pos;
+import javafx.scene.layout.StackPane;
+
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
 public class EntityLayer implements EntityListener {
     private CellLayer cellLayer;
-    private Map<Entity, ImageView> images;
+    private StackPane pane;
+    private Map<Entity, Sprite> sprites;
 
     public EntityLayer(CellLayer cellLayer) {
         this.cellLayer = cellLayer;
-        this.images = new HashMap<>();
+        this.sprites = new HashMap<>();
+
+        this.pane = new StackPane();
+        this.cellLayer.getChildren().add(pane);
+        this.pane.toFront();
+        this.pane.setAlignment(Pos.CENTER);
     }
 
     @Override
     public void entityUpdated(Entity entity, Point position) {
-        ImageView imageView = images.get(entity);
-        if (imageView == null) {
+        Sprite sprite = this.sprites.get(entity);
+        if (sprite == null) {
             if (entity instanceof Pacman) {
-                imageView = new PacmanAnimation();
+                sprite = new PacmanAnimation();
                 //imageView = new GhostAnimation(Ghost.BLUE);
             } else if (entity instanceof Ghost) {
-                imageView = new GhostAnimation(((Ghost)entity).getId());
+                sprite = new GhostAnimation(((Ghost)entity).getId());
             }
 
-            imageView.setTranslateX(position.x * 20.0f); // Initial position
-            imageView.setTranslateY(position.y * 20.0f); // Initial position
+            sprite.setTranslateX(position.x * Sprite.TILE_SIZE); // Initial position
+            sprite.setTranslateY(position.y * Sprite.TILE_SIZE); // Initial position
 
-            this.cellLayer.getChildren().add(imageView);
-            this.images.put(entity, imageView);
-            imageView.toFront();
+            this.pane.getChildren().add(sprite);
+            this.sprites.put(entity, sprite);
+            sprite.toFront();
         }
 
         if (entity instanceof Pacman || entity instanceof Ghost) {
-            MovableEntityAnimation movableEntityAnimation = (MovableEntityAnimation)imageView;
+            MovableEntityAnimation movableEntityAnimation = (MovableEntityAnimation)sprite;
             movableEntityAnimation.update((MovableEntity)entity, position);
         }
     }
