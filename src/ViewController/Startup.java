@@ -7,19 +7,22 @@ package ViewController;
 
 import Model.*;
 
+import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 public class Startup extends javafx.application.Application {
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage stage) {
         StackPane root = new StackPane();
         root.setAlignment(Pos.CENTER);
 
@@ -57,7 +60,7 @@ public class Startup extends javafx.application.Application {
             }
         });
 
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
                 game.stop();
             }
@@ -67,12 +70,23 @@ public class Startup extends javafx.application.Application {
         scene.setFill(Color.BLACK);
         root.setScaleX(2.0);
         root.setScaleY(2.0);
-        primaryStage.setTitle("Pacman est un très Beaujeu !");
-        primaryStage.setScene(scene);
-        primaryStage.setFullScreen(false);
-        primaryStage.setMaximized(true);
-        primaryStage.show();
+        stage.setTitle("Pacman est un très Beaujeu !");
+        stage.setScene(scene);
+        stage.setFullScreen(false);
+        stage.setMaximized(true);
+        stage.show();
         root.requestFocus();
+
+        ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> {
+            double factorY = (stage.getHeight() - 30) / (double)cellLayer.getHeight();
+            double factorX = stage.getWidth() / (double)cellLayer.getWidth();
+            double factor = Math.min(2.0, Math.min(factorY, factorX));
+            root.setScaleX(factor);
+            root.setScaleY(factor);
+        };
+
+        stage.widthProperty().addListener(stageSizeListener);
+        stage.heightProperty().addListener(stageSizeListener);
     }
 
     /**
