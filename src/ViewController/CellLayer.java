@@ -39,6 +39,13 @@ public class CellLayer implements CellListener, MapListener {
         return this.grid.getChildren();
     }
 
+    public int getWidth() {
+        return this.cells.length * Sprite.TILE_SIZE;
+    }
+    public int getHeight() {
+        return this.cells[0].length * Sprite.TILE_SIZE;
+    }
+
     @Override
     public void cellUpdated(Cell cell, Point position) {
         Sprite sprite = this.sprites[position.x][position.y];
