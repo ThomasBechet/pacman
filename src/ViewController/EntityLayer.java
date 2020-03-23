@@ -29,7 +29,7 @@ public class EntityLayer implements EntityListener {
         if (sprite == null) {
             if (entity instanceof Pacman) {
                 sprite = new PacmanAnimation();
-                //imageView = new GhostAnimation(Ghost.BLUE);
+                //sprite = new GhostAnimation(Ghost.BLUE);
             } else if (entity instanceof Ghost) {
                 sprite = new GhostAnimation(((Ghost)entity).getId());
             }

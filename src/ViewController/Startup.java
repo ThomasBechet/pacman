@@ -65,8 +65,8 @@ public class Startup extends javafx.application.Application {
 
         Scene scene = new Scene(root);
         scene.setFill(Color.BLACK);
-        root.setScaleX(2);
-        root.setScaleY(2);
+        root.setScaleX(2.0);
+        root.setScaleY(2.0);
         primaryStage.setTitle("Pacman est un très Beaujeu !");
         primaryStage.setScene(scene);
         primaryStage.setFullScreen(false);
