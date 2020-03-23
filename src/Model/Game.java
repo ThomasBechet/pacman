@@ -41,7 +41,7 @@ public class Game {
 
     public void start() {
         this.stop();
-        this.sequencer = new Sequencer(grid.getEntities(), grid);
+        this.sequencer = new Sequencer(this.grid);
         this.sequencer.start();
         this.gameState = GameState.RUNNING;
     }

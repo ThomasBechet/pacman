@@ -3,9 +3,7 @@ package Model;
 import javafx.util.Duration;
 
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Sequencer implements Runnable {
     private Thread thread;
@@ -13,12 +11,14 @@ public class Sequencer implements Runnable {
     private Map<MovableEntity, Duration> movableEntities;
     private volatile boolean running;
     private Grid grid;
+    private Timer doorsTimer;
 
-    public Sequencer(List<Entity> entities, Grid grid) {
-        this.entities = entities;
+    public Sequencer(Grid grid) {
+        this.entities = grid.getEntities();
         this.grid = grid;
         this.movableEntities = new HashMap<>();
         this.running = false;
+        this.doorsTimer = new Timer();
     }
 
     public void start() {
@@ -41,7 +41,13 @@ public class Sequencer implements Runnable {
     @Override
     public void run() {
         Instant lastTime = Instant.now();
-        Instant lastDoorUpdate = Instant.now();
+
+        this.doorsTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                grid.openNextDoor();
+            }
+        }, 5000, 5000);
 
         while(this.running) {
 
@@ -67,18 +73,10 @@ public class Sequencer implements Runnable {
                     }
 
                 } else {
-
                     // Other entities are simply updated
                     entity.update();
-
                 }
             }
-
-            if (java.time.Duration.between(lastDoorUpdate, current).toMillis() > 5000) {
-                lastDoorUpdate = current;
-                this.grid.changeDoorColor((int) (Math.random() * 5) - 1);
-            }
-
 
             try {
                 Thread.sleep(5); // Required to reduce loop lag introduced by a zero deltatime
@@ -86,5 +84,7 @@ public class Sequencer implements Runnable {
 
             lastTime = current;
         }
+
+        this.doorsTimer.cancel();
     }
 }

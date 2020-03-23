@@ -7,9 +7,19 @@ public class PacmanController {
     public static final int PLAYER_4 = 3;
 
     private Pacman pacman;
+    private int index;
 
-    public void setPacman(Pacman pacman) {
+    public Pacman getPacman() {
+        return this.pacman;
+    }
+
+    public int getIndex() {
+        return this.index;
+    }
+
+    public void setup(Pacman pacman, int index) {
         this.pacman = pacman;
+        this.index = index;
     }
 
     public void up() {
@@ -44,6 +54,11 @@ public class PacmanController {
     public void decreaseSpeed() {
         if (this.pacman != null) {
             if (this.pacman.getSpeed() <= 500) this.pacman.setSpeed(this.pacman.getSpeed() + 50);
+        }
+    }
+    public void removeLife() {
+        if (this.pacman != null) {
+            this.pacman.removeLife();
         }
     }
 }

@@ -1,14 +1,8 @@
 package ViewController;
 
 import Model.*;
-import javafx.collections.ObservableList;
-import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 
 import java.awt.*;
 
@@ -16,26 +10,12 @@ public class CellLayer extends GridPane implements CellListener, MapListener {
     private Sprite[][] sprites;
     private Cell[][] cells;
 
-    private final static Image imageFloor = new Image("Images/Floor.png");
-    private final static Image imageFloorPacgumBase = new Image("Images/FloorPacgumBase.png");
-    private final static Image imageFloorPacgumFruit = new Image("Images/FloorPacgumFruit.png");
-    private final static Image imageFloorPacgumSuper = new Image("Images/FloorPacgumSuper.png");
-    private final static Image imageWall = new Image("Images/Walls.png");
-    private final static Image imageDoor = new Image("Images/Door.png");
-    private final static Image imageDoorB = new Image("Images/DoorBlue.png");
-    private final static Image imageDoorR = new Image("Images/DoorRed.png");
-    private final static Image imageDoorP = new Image("Images/DoorPink.png");
-    private final static Image imageDoorO = new Image("Images/DoorOrange.png");
-
-    public CellLayer() {
-        //this.setAlignment(Pos.CENTER);
-        //pane.getChildren().add(this.grid);
-        //pane.setAlignment(this.grid, Pos.CENTER);
-    }
-
-    /*public ObservableList<Node> getChildren() {
-        return this.grid.getChildren();
-    }*/
+    private final static Image imageFloor = new Image("Assets/Floor.png");
+    private final static Image imageFloorPacgumBase = new Image("Assets/FloorPacgumBase.png");
+    private final static Image imageFloorPacgumFruit = new Image("Assets/FloorPacgumFruit.png");
+    private final static Image imageFloorPacgumSuper = new Image("Assets/FloorPacgumSuper.png");
+    private final static Image imageWall = new Image("Assets/Walls.png");
+    private final static Image imageDoor = new Image("Assets/Door.png");
 
     public int getGridWidth() {
         return this.cells.length * Sprite.TILE_SIZE;
@@ -66,13 +46,15 @@ public class CellLayer extends GridPane implements CellListener, MapListener {
         } else if (cell instanceof Door) {
             sprite.setSpriteSheet(imageDoor);
             if (((Door) cell).getColor() == Ghost.BLUE)
-                sprite.setSpriteSheet(imageDoorB);
-            if (((Door) cell).getColor() == Ghost.ORANGE)
-                sprite.setSpriteSheet(imageDoorO);
-            if (((Door) cell).getColor() == Ghost.PINK)
-                sprite.setSpriteSheet(imageDoorP);
-            if (((Door) cell).getColor() == Ghost.RED)
-                sprite.setSpriteSheet(imageDoorR);
+                sprite.setFrame(1, 0);
+            else if (((Door) cell).getColor() == Ghost.ORANGE)
+                sprite.setFrame(2,0);
+            else if (((Door) cell).getColor() == Ghost.PINK)
+                sprite.setFrame(3, 0);
+            else if (((Door) cell).getColor() == Ghost.RED)
+                sprite.setFrame(4, 0);
+            else
+                sprite.setFrame(0, 0);
         }
     }
 

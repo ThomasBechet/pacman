@@ -7,7 +7,7 @@ public class Door extends Cell {
         this.color = color;
     }
 
-    public boolean isOpen(int id) {
+    public boolean isOpenFor(int id) {
         return this.color == id;
     }
 
@@ -17,10 +17,6 @@ public class Door extends Cell {
 
     public void setColor(int color) {
         this.color = color;
-    }
-
-    public void close() {
-        this.color = -1;
     }
 
 }

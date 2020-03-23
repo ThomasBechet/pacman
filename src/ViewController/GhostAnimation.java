@@ -8,10 +8,10 @@ import javafx.scene.image.Image;
 import java.awt.*;
 
 public class GhostAnimation extends MovableEntityAnimation {
-    private final static Image imageBlueGhost = new Image("Images/BlueGhost.png");
-    private final static Image imageOrangeGhost = new Image("Images/OrangeGhost.png");
-    private final static Image imagePinkGhost = new Image("Images/PinkGhost.png");
-    private final static Image imageRedGhost = new Image("Images/RedGhost.png");
+    private final static Image imageBlueGhost = new Image("Assets/BlueGhost.png");
+    private final static Image imageOrangeGhost = new Image("Assets/OrangeGhost.png");
+    private final static Image imagePinkGhost = new Image("Assets/PinkGhost.png");
+    private final static Image imageRedGhost = new Image("Assets/RedGhost.png");
 
     private static Image imageFromId(int id) {
         Image image = null;

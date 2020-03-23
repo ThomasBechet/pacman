@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Ghost extends MovableEntity {
+    public final static int NONE = -1;
     public final static int BLUE = 0;
     public final static int ORANGE = 1;
     public final static int PINK = 2;
@@ -30,7 +31,7 @@ public class Ghost extends MovableEntity {
         if (grid.canMove(this, Direction.UP)) {
             dir.add(Direction.UP);
             for (Pacman pacman : grid.getPacmans()) {
-                if (grid.getEntityPosition(this, 0).y > grid.getEntityPosition(pacman, 0).y) {
+                if (grid.getEntityPosition(this).y > grid.getEntityPosition(pacman).y) {
                     up += 100;
                 } else {
                     up += 25;
@@ -43,7 +44,7 @@ public class Ghost extends MovableEntity {
         if (grid.canMove(this, Direction.RIGHT)) {
             dir.add(Direction.RIGHT);
             for (Pacman pacman : grid.getPacmans()) {
-                if (grid.getEntityPosition(this, 0).x < grid.getEntityPosition(pacman, 0).x) {
+                if (grid.getEntityPosition(this).x < grid.getEntityPosition(pacman).x) {
                     right += 100;
                 } else {
                     right += 25;
@@ -56,7 +57,7 @@ public class Ghost extends MovableEntity {
         if (grid.canMove(this, Direction.DOWN)) {
             dir.add(Direction.DOWN);
             for (Pacman pacman : grid.getPacmans()) {
-                if (grid.getEntityPosition(this, 0).y < grid.getEntityPosition(pacman, 0).y) {
+                if (grid.getEntityPosition(this).y < grid.getEntityPosition(pacman).y) {
                     down += 100;
                 } else {
                     down += 25;
@@ -69,7 +70,7 @@ public class Ghost extends MovableEntity {
         if (grid.canMove(this, Direction.LEFT)) {
             dir.add(Direction.LEFT);
             for (Pacman pacman : grid.getPacmans()) {
-                if (grid.getEntityPosition(this, 0).x > grid.getEntityPosition(pacman, 0).x) {
+                if (grid.getEntityPosition(this).x > grid.getEntityPosition(pacman).x) {
                     left += 100;
                 } else {
                     left += 25;
