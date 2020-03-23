@@ -5,10 +5,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.LineNumberReader;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public class Grid {
     private Cell[][] cells;
@@ -34,11 +32,15 @@ public class Grid {
         controller.setPacman(this.controllers.get(index));
     }
 
+    public Collection<Pacman> getPacmans () {
+        return this.controllers.values();
+    }
+
     public boolean canMove(Entity entity, Direction direction) {
         Point position = this.positions.get(entity);
         position = (Point)position.clone();
         this.applyDirection(position, direction);
-        return this.isWalkable(this.cells[position.x][position.y]);
+        return this.isWalkable(entity, this.cells[position.x][position.y]);
     }
 
     public void move(Entity entity, Direction direction) {
@@ -60,8 +62,10 @@ public class Grid {
         return cells[position.x][position.y];
     }
 
-    public Point getPacmanPosition(int controller) {
-        return positions.get(controllers.get(controller));
+    public Point getEntityPosition(Entity entity, int controller) {
+//        if (entity instanceof Pacman)
+//            return positions.get(controllers.get(controller));
+        return positions.get(entity);
     }
 
     public Pacman getPacmanByController(int controller) {
@@ -110,6 +114,17 @@ public class Grid {
         this.entityListener.entityUpdated(entity, this.positions.get(entity));
     }
 
+    public void changeDoorColor (int color) {
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[i].length; j++) {
+                if (cells[i][j] instanceof Door) {
+                    ((Door) cells[i][j]).setColor(color);
+                    this.cellListener.cellUpdated(cells[i][j], new Point(i, j));
+                }
+            }
+        }
+    }
+
     private void addEntity(Entity entity, Point point) {
         this.entities.add(entity);
         this.positions.put(entity, point);
@@ -152,8 +167,8 @@ public class Grid {
             point.y = this.cells[0].length - 1;
         }
     }
-    private boolean isWalkable(Cell cell) {
-        return !(cell instanceof Wall || cell instanceof Door);
+    private boolean isWalkable(Entity entity, Cell cell) {
+        return !(cell instanceof Wall) && ((cell instanceof Door && entity instanceof Ghost && ((Door) cell).isOpen(((Ghost) entity).getId())) || !(cell instanceof Door));
     }
 
     private void loadCellFromCharacter(char c, Point position) {
@@ -162,7 +177,7 @@ public class Grid {
         } else if (c == 'F') {
             this.cells[position.x][position.y] = new Floor(null);
         } else if (c == 'D') {
-            this.cells[position.x][position.y] = new Door(false);
+            this.cells[position.x][position.y] = new Door(2);
         } else if (Character.isDigit(c)) {
             this.cells[position.x][position.y] = new Floor(null);
             Pacman pacman = new Pacman(this, 3);

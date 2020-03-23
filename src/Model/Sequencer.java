@@ -12,9 +12,11 @@ public class Sequencer implements Runnable {
     private List<Entity> entities;
     private Map<MovableEntity, Duration> movableEntities;
     private volatile boolean running;
+    private Grid grid;
 
-    public Sequencer(List<Entity> entities) {
+    public Sequencer(List<Entity> entities, Grid grid) {
         this.entities = entities;
+        this.grid = grid;
         this.movableEntities = new HashMap<>();
         this.running = false;
     }
@@ -39,6 +41,7 @@ public class Sequencer implements Runnable {
     @Override
     public void run() {
         Instant lastTime = Instant.now();
+        Instant lastDoorUpdate = Instant.now();
 
         while(this.running) {
 
@@ -70,6 +73,12 @@ public class Sequencer implements Runnable {
 
                 }
             }
+
+            if (java.time.Duration.between(lastDoorUpdate, current).toMillis() > 5000) {
+                lastDoorUpdate = current;
+                this.grid.changeDoorColor((int) (Math.random() * 5) - 1);
+            }
+
 
             try {
                 Thread.sleep(5); // Required to reduce loop lag introduced by a zero deltatime

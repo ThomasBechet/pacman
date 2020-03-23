@@ -1,21 +1,26 @@
 package Model;
 
 public class Door extends Cell {
-    private boolean isOpen;
+    int color;
 
-    public Door(boolean isOpen) {
-        this.isOpen = isOpen;
+    public Door(int color) {
+        this.color = color;
     }
 
-    public boolean isOpen() {
-        return this.isOpen;
+    public boolean isOpen(int id) {
+        return this.color == id;
     }
 
-    public void open() {
-        this.isOpen = true;
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 
     public void close() {
-        this.isOpen = false;
+        this.color = -1;
     }
+
 }

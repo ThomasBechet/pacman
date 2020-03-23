@@ -23,6 +23,10 @@ public class CellLayer implements CellListener, MapListener {
     private final static Image imageFloorPacgumSuper = new Image("Images/FloorPacgumSuper.png");
     private final static Image imageWall = new Image("Images/Walls.png");
     private final static Image imageDoor = new Image("Images/Door.png");
+    private final static Image imageDoorB = new Image("Images/DoorBlue.png");
+    private final static Image imageDoorR = new Image("Images/DoorRed.png");
+    private final static Image imageDoorP = new Image("Images/DoorPink.png");
+    private final static Image imageDoorO = new Image("Images/DoorOrange.png");
 
     public CellLayer(StackPane pane) {
         this.grid = new GridPane();
@@ -56,6 +60,14 @@ public class CellLayer implements CellListener, MapListener {
             }
         } else if (cell instanceof Door) {
             sprite.setSpriteSheet(imageDoor);
+            if (((Door) cell).getColor() == Ghost.BLUE)
+                sprite.setSpriteSheet(imageDoorB);
+            if (((Door) cell).getColor() == Ghost.ORANGE)
+                sprite.setSpriteSheet(imageDoorO);
+            if (((Door) cell).getColor() == Ghost.PINK)
+                sprite.setSpriteSheet(imageDoorP);
+            if (((Door) cell).getColor() == Ghost.RED)
+                sprite.setSpriteSheet(imageDoorR);
         }
     }
 

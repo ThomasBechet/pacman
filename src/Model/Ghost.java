@@ -1,6 +1,10 @@
 package Model;
 
+import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
+
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Ghost extends MovableEntity {
     public final static int BLUE = 0;
@@ -21,6 +25,80 @@ public class Ghost extends MovableEntity {
 
     @Override
     public void tick() {
-        // Do nothing
+        ArrayList<Direction> dir = new ArrayList<Direction>();
+        int down = 0, up = 0, left = 0, right = 0;
+        if (grid.canMove(this, Direction.UP)) {
+            dir.add(Direction.UP);
+            for (Pacman pacman : grid.getPacmans()) {
+                if (grid.getEntityPosition(this, 0).y > grid.getEntityPosition(pacman, 0).y) {
+                    up += 100;
+                } else {
+                    up += 25;
+                }
+            }
+            if (this.getDirection() == Direction.DOWN) {
+                up = 0;
+            }
+        }
+        if (grid.canMove(this, Direction.RIGHT)) {
+            dir.add(Direction.RIGHT);
+            for (Pacman pacman : grid.getPacmans()) {
+                if (grid.getEntityPosition(this, 0).x < grid.getEntityPosition(pacman, 0).x) {
+                    right += 100;
+                } else {
+                    right += 25;
+                }
+            }
+            if (this.getDirection() == Direction.LEFT) {
+                right = 0;
+            }
+        }
+        if (grid.canMove(this, Direction.DOWN)) {
+            dir.add(Direction.DOWN);
+            for (Pacman pacman : grid.getPacmans()) {
+                if (grid.getEntityPosition(this, 0).y < grid.getEntityPosition(pacman, 0).y) {
+                    down += 100;
+                } else {
+                    down += 25;
+                }
+            }
+            if (this.getDirection() == Direction.UP) {
+                down = 0;
+            }
+        }
+        if (grid.canMove(this, Direction.LEFT)) {
+            dir.add(Direction.LEFT);
+            for (Pacman pacman : grid.getPacmans()) {
+                if (grid.getEntityPosition(this, 0).x > grid.getEntityPosition(pacman, 0).x) {
+                    left += 100;
+                } else {
+                    left += 25;
+                }
+            }
+            if (this.getDirection() == Direction.RIGHT) {
+                left = 0;
+            }
+        }
+        if (dir.size() == 1) {
+            this.setDirection(dir.get(0));
+            return;
+        }
+        int rand = (int) (Math.random() * ( up + left + right + down - 1 ));
+        rand -= up;
+        if (rand < 0) {
+            this.setDirection(Direction.UP);
+            return;
+        }
+        rand -= right;
+        if (rand < 0) {
+            this.setDirection(Direction.RIGHT);
+            return;
+        }
+        rand -= down;
+        if (rand < 0) {
+            this.setDirection(Direction.DOWN);
+            return;
+        }
+        this.setDirection(Direction.LEFT);
     }
 }

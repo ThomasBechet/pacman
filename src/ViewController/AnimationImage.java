@@ -20,7 +20,7 @@ public class AnimationImage extends Sprite {
         this.length = (int)(this.getImage().getWidth() / (Sprite.TILE_SIZE * Sprite.SCALE_FACTOR));
 
         Timeline timeline = new Timeline();
-        timeline.getKeyFrames().add(new KeyFrame(new Duration(300), new EventHandler<ActionEvent>() {
+        timeline.getKeyFrames().add(new KeyFrame(new Duration(75), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 Platform.runLater(() -> {
