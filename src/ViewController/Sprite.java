@@ -5,7 +5,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.image.*;
 
 public class Sprite extends ImageView {
-    public final static int SCALE_FACTOR = 2;
+    public final static int SCALE_FACTOR = 3;
     public final static int TILE_SIZE = 20;
 
     private final static Image resample(Image input) {

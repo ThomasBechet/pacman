@@ -12,10 +12,9 @@ import javafx.scene.layout.StackPane;
 
 import java.awt.*;
 
-public class CellLayer implements CellListener, MapListener {
+public class CellLayer extends GridPane implements CellListener, MapListener {
     private Sprite[][] sprites;
     private Cell[][] cells;
-    private GridPane grid;
 
     private final static Image imageFloor = new Image("Images/Floor.png");
     private final static Image imageFloorPacgumBase = new Image("Images/FloorPacgumBase.png");
@@ -28,21 +27,20 @@ public class CellLayer implements CellListener, MapListener {
     private final static Image imageDoorP = new Image("Images/DoorPink.png");
     private final static Image imageDoorO = new Image("Images/DoorOrange.png");
 
-    public CellLayer(StackPane pane) {
-        this.grid = new GridPane();
-        this.grid.setAlignment(Pos.CENTER);
-        pane.getChildren().add(this.grid);
+    public CellLayer() {
+        //this.setAlignment(Pos.CENTER);
+        //pane.getChildren().add(this.grid);
         //pane.setAlignment(this.grid, Pos.CENTER);
     }
 
-    public ObservableList<Node> getChildren() {
+    /*public ObservableList<Node> getChildren() {
         return this.grid.getChildren();
-    }
+    }*/
 
-    public int getWidth() {
+    public int getGridWidth() {
         return this.cells.length * Sprite.TILE_SIZE;
     }
-    public int getHeight() {
+    public int getGridHeight() {
         return this.cells[0].length * Sprite.TILE_SIZE;
     }
 
@@ -86,7 +84,7 @@ public class CellLayer implements CellListener, MapListener {
             for (int y = 0; y < cells[0].length; y++) {
                 this.sprites[x][y] = new Sprite();
                 this.cellUpdated(cells[x][y], new Point(x, y));
-                this.grid.add(this.sprites[x][y], x, y);
+                this.add(this.sprites[x][y], x, y);
                 this.sprites[x][y].toBack();
             }
         }
