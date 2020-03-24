@@ -13,7 +13,7 @@ import javafx.scene.text.Text;
 
 import java.awt.*;
 
-public class PlayerInfo extends GridPane implements EntityListener {
+public class PlayerInfo extends GridPane {
 
     static {
         Font.loadFont(ClassLoader.getSystemResource("Assets/upheavtt.ttf").toExternalForm(), 50);
@@ -51,8 +51,7 @@ public class PlayerInfo extends GridPane implements EntityListener {
         this.playerText.setText("Player " + (controller.getIndex() + 1));
     }
 
-    @Override
-    public void entityUpdated(Entity entity, Point position) {
+    public void updateEntity(Entity entity, Point position) {
         if (this.pacmanController != null && entity == this.pacmanController.getPacman()) {
             Pacman pacman = (Pacman)entity;
 

@@ -8,7 +8,7 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EntityLayer implements EntityListener {
+public class EntityLayer {
     private CellLayer cellLayer;
     private StackPane pane;
     private Map<Entity, Sprite> sprites;
@@ -23,8 +23,7 @@ public class EntityLayer implements EntityListener {
         this.pane.setAlignment(Pos.CENTER);
     }
 
-    @Override
-    public void entityUpdated(Entity entity, Point position) {
+    public void updateEntity(Entity entity, Point position) {
         Sprite sprite = this.sprites.get(entity);
         if (sprite == null) {
             if (entity instanceof Pacman) {

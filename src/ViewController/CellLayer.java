@@ -6,7 +6,7 @@ import javafx.scene.layout.GridPane;
 
 import java.awt.*;
 
-public class CellLayer extends GridPane implements CellListener, MapListener {
+public class CellLayer extends GridPane {
     private Sprite[][] sprites;
     private Cell[][] cells;
 
@@ -24,8 +24,7 @@ public class CellLayer extends GridPane implements CellListener, MapListener {
         return this.cells[0].length * Sprite.TILE_SIZE;
     }
 
-    @Override
-    public void cellUpdated(Cell cell, Point position) {
+    public void updateCell(Cell cell, Point position) {
         Sprite sprite = this.sprites[position.x][position.y];
         if (cell instanceof Wall) {
             this.buildWall(sprite, position);
@@ -58,14 +57,13 @@ public class CellLayer extends GridPane implements CellListener, MapListener {
         }
     }
 
-    @Override
-    public void mapUpdated(Cell[][] cells) {
+    public void updateMap(Cell[][] cells) {
         this.cells = cells;
         this.sprites = new Sprite[cells.length][cells[0].length];
         for (int x = 0; x < cells.length; x++) {
             for (int y = 0; y < cells[0].length; y++) {
                 this.sprites[x][y] = new Sprite();
-                this.cellUpdated(cells[x][y], new Point(x, y));
+                this.updateCell(cells[x][y], new Point(x, y));
                 this.add(this.sprites[x][y], x, y);
                 this.sprites[x][y].toBack();
             }
