@@ -52,7 +52,12 @@ public class Grid {
             Cell curCell = this.cellAt(point);
             if (curCell instanceof Floor && entity instanceof Pacman) {
                 if (((Floor)curCell).hasPacgum()) {
+                    int oldScore = ((Pacman) entity).getScore();
                     ((Pacman)entity).addScore(((Floor)curCell).getPacgum().getValue());
+                    int mod = ((Pacman) entity).getScore() / 10000;
+                    if (oldScore - mod * 10000 < 0) {
+                        ((Pacman) entity).addLife();
+                    }
                     ((Floor)curCell).removePacgum();
                     this.cellListener.cellUpdated(curCell, point);
                 }
@@ -60,9 +65,9 @@ public class Grid {
                     if (e instanceof Ghost) {
                         if (getEntityPosition(entity).equals(getEntityPosition(e))) {
                             if (((Pacman) entity).isHero()) {
-                                ((Ghost) e).setEntityState(MovableEntity.EntityState.DEAD);
+                                ((Ghost) e).die();
                             } else {
-                                ((Pacman) entity).setEntityState(MovableEntity.EntityState.DEAD);
+                                ((Pacman) entity).removeLife();
                             }
                         }
                     }
@@ -73,9 +78,9 @@ public class Grid {
                     if (e instanceof Pacman) {
                         if (getEntityPosition(entity).equals(getEntityPosition(e))) {
                             if (((Pacman) e).isHero()) {
-                                ((Ghost) entity).setEntityState(MovableEntity.EntityState.DEAD);
+                                ((Ghost) entity).die();
                             } else {
-                                ((Pacman) e).setEntityState(MovableEntity.EntityState.DEAD);
+                                ((Pacman) e).removeLife();
                             }
                         }
                     }

@@ -62,4 +62,8 @@ public class MovableEntity extends Entity {
     public EntityState getEntityState() {
         return entityState;
     }
+
+    public void die() {
+        this.entityState = EntityState.DEAD;
+    }
 }
