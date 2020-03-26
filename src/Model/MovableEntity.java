@@ -1,15 +1,24 @@
 package Model;
 
+import java.awt.*;
+
 public class MovableEntity extends Entity {
     private boolean isMoving;
     private Direction direction;
     private int speed;
+    public enum EntityState {
+        DEAD,
+        ALIVE,
+        PENDING
+    }
+    private EntityState entityState;
 
     public MovableEntity(Grid grid) {
         super(grid);
         this.isMoving = false;
         this.direction = Direction.LEFT;
         this.speed = 300;
+        this.entityState = EntityState.PENDING;
     }
 
     public Direction getDirection() {
@@ -40,5 +49,17 @@ public class MovableEntity extends Entity {
         this.grid.notifyEntity(this);
     }
 
+    public Point getSpawn() {
+        return this.grid.getEntitySpawn(this);
+    }
+
     public void tick() {  }
+
+    public void setEntityState(EntityState entityState) {
+        this.entityState = entityState;
+    }
+
+    public EntityState getEntityState() {
+        return entityState;
+    }
 }

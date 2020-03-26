@@ -12,6 +12,7 @@ public class Grid {
     private Cell[][] cells;
     private List<Entity> entities;
     private Map<Entity, Point> positions;
+    private Map<Entity, Point> spawns;
     private Map<Integer, Pacman> controllers;
     private CellListener cellListener;
     private EntityListener entityListener;
@@ -21,6 +22,7 @@ public class Grid {
         this.entityListener = entityListener;
         this.entities = new ArrayList<>();
         this.positions = new HashMap<>();
+        this.spawns = new HashMap<>();
         this.controllers = new HashMap<>();
 
         this.loadMap(file);
@@ -54,6 +56,30 @@ public class Grid {
                     ((Floor)curCell).removePacgum();
                     this.cellListener.cellUpdated(curCell, point);
                 }
+                for (Entity e : this.getEntities()) {
+                    if (e instanceof Ghost) {
+                        if (getEntityPosition(entity).equals(getEntityPosition(e))) {
+                            if (((Pacman) entity).isHero()) {
+                                ((Ghost) e).setEntityState(MovableEntity.EntityState.DEAD);
+                            } else {
+                                ((Pacman) entity).setEntityState(MovableEntity.EntityState.DEAD);
+                            }
+                        }
+                    }
+                }
+            }
+            if (entity instanceof Ghost) {
+                for (Entity e : this.getEntities()) {
+                    if (e instanceof Pacman) {
+                        if (getEntityPosition(entity).equals(getEntityPosition(e))) {
+                            if (((Pacman) e).isHero()) {
+                                ((Ghost) entity).setEntityState(MovableEntity.EntityState.DEAD);
+                            } else {
+                                ((Pacman) e).setEntityState(MovableEntity.EntityState.DEAD);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -68,6 +94,10 @@ public class Grid {
 
     public List<Entity> getEntities() {
         return this.entities;
+    }
+
+    public Point getEntitySpawn(Entity entity) {
+        return spawns.get(entity);
     }
 
     public void openNextDoor() {
@@ -119,6 +149,7 @@ public class Grid {
     private void addEntity(Entity entity, Point point) {
         this.entities.add(entity);
         this.positions.put(entity, point);
+        this.spawns.put(entity, point);
         this.entityListener.entityUpdated(entity, point);
     }
     private void removeEntity(Entity entity) {

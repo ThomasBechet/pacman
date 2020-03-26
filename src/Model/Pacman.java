@@ -4,6 +4,7 @@ public class Pacman extends MovableEntity {
     private Direction wantedDirection;
     private int lifes;
     private int score;
+    private boolean hero;
 
     public Pacman(Grid grid, int lifeCount) {
         super(grid);
@@ -11,6 +12,7 @@ public class Pacman extends MovableEntity {
         this.wantedDirection = this.getDirection();
         this.lifes = lifeCount;
         this.score = 0;
+        this.hero = false;
     }
 
     public void setWantedDirection(Direction direction) {
@@ -45,5 +47,13 @@ public class Pacman extends MovableEntity {
         if (this.grid.canMove(this, this.wantedDirection)) {
             this.setDirection(this.wantedDirection);
         }
+    }
+
+    public void setHero(boolean hero) {
+        this.hero = hero;
+    }
+
+    public boolean isHero() {
+        return hero;
     }
 }
