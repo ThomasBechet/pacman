@@ -6,7 +6,7 @@ public class Application extends javafx.application.Application {
 
     @Override
     public void start(Stage stage) {
-        GameView view = new GameView(stage);
+        ViewManager manager = new ViewManager(stage);
     }
 
     public static void main(String[] args) {
