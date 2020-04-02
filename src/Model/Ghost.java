@@ -12,12 +12,32 @@ public class Ghost extends MovableEntity {
     public final static int ORANGE = 1;
     public final static int PINK = 2;
     public final static int RED = 3;
+    public final static int DEAD = -2;
 
     private int id;
+    private boolean panic;
+    private int panicTime;
 
     public Ghost(Grid grid, int id) {
         super(grid);
         this.id = id;
+        panic = false;
+    }
+
+    public void setPanic(boolean panic) {
+        this.panic = panic;
+        if (panic) {
+            panicTime = 10000;
+
+        }
+    }
+
+    public boolean isPanic() {
+        return panic;
+    }
+
+    public int getPanicTime() {
+        return panicTime;
     }
 
     public int getId() {

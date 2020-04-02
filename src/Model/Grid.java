@@ -54,6 +54,14 @@ public class Grid {
                 if (((Floor)curCell).hasPacgum()) {
                     int oldScore = ((Pacman) entity).getScore();
                     ((Pacman)entity).addScore(((Floor)curCell).getPacgum().getValue());
+                    if (((Floor) curCell).getPacgum().getType().equals(PacgumType.SUPER)) {
+                        ((Pacman) entity).setHero(true);
+                        for (Entity g : this.getEntities()) {
+                            if (g instanceof Ghost) {
+                                ((Ghost) g).setPanic(true);
+                            }
+                        }
+                    }
                     int mod = ((Pacman) entity).getScore() / 10000;
                     if (oldScore - mod * 10000 < 0) {
                         ((Pacman) entity).addLife();

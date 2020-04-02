@@ -5,6 +5,7 @@ public class Pacman extends MovableEntity {
     private int lifes;
     private int score;
     private boolean hero;
+    private int timeHero;
 
     public Pacman(Grid grid, int lifeCount) {
         super(grid);
@@ -52,6 +53,8 @@ public class Pacman extends MovableEntity {
 
     public void setHero(boolean hero) {
         this.hero = hero;
+        System.out.println("setHero");
+        timeHero = 0;
     }
 
     public boolean isHero() {
