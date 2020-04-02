@@ -5,10 +5,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.stage.WindowEvent;
 
 public class MainView extends View {
@@ -17,6 +14,7 @@ public class MainView extends View {
     private StackPane root;
 
     public MainView(ViewManager viewManager) {
+        super(viewManager);
 
         this.root = new StackPane();
         this.root.setAlignment(Pos.CENTER);

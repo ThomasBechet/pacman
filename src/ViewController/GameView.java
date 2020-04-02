@@ -30,6 +30,8 @@ public class GameView extends View implements MapListener, CellListener, EntityL
     private GameController gameController;
 
     public GameView(ViewManager viewManager) {
+        super(viewManager);
+
         this.root = new StackPane();
         this.root.setAlignment(Pos.CENTER);
         this.root.setStyle("-fx-background-color: black;");
