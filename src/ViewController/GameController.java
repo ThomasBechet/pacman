@@ -54,7 +54,7 @@ public class GameController {
         }
     }
 
-    public void handle(WindowEvent windowEvent) {
-        game.stop();
+    public void terminate() {
+        this.game.stop();
     }
 }

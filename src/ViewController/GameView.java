@@ -7,31 +7,32 @@ package ViewController;
 
 import Model.*;
 
-import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.awt.*;
 
-public class GameView implements MapListener, CellListener, EntityListener {
-
-
+public class GameView extends View implements MapListener, CellListener, EntityListener {
+    private Scene scene;
+    private StackPane root;
     private FlowPane playerInfoPane;
     private PlayerInfo[] playerInfos;
     private CellLayer cellLayer;
     private EntityLayer entityLayer;
     private GridPane gridPane;
+    private GameController gameController;
 
-    public GameView(Stage stage) {
-        StackPane root = new StackPane();
-        root.setAlignment(Pos.CENTER);
+    public GameView(ViewManager viewManager) {
+        this.root = new StackPane();
+        this.root.setAlignment(Pos.CENTER);
+        this.root.setStyle("-fx-background-color: black;");
 
         this.playerInfoPane = new FlowPane();
         this.playerInfoPane.setAlignment(Pos.CENTER);
@@ -41,49 +42,52 @@ public class GameView implements MapListener, CellListener, EntityListener {
         this.playerInfos = new PlayerInfo[10];
 
         this.cellLayer = new CellLayer();
-
         this.entityLayer = new EntityLayer(cellLayer);
 
         this.gridPane = new GridPane();
         this.gridPane.setAlignment(Pos.CENTER);
         this.gridPane.add(this.playerInfoPane, 0, 0);
         this.gridPane.add(this.cellLayer, 0, 1);
-        root.getChildren().add(this.gridPane);
+        this.root.getChildren().add(this.gridPane);
 
-        Scene scene = new Scene(root);
-        scene.setFill(Color.BLACK);
-        stage.setTitle("Pacman est un très Beaujeu !");
-        stage.setScene(scene);
-        stage.setWidth(1600);
-        stage.setHeight(900);
-        stage.show();
+        this.scene = new Scene(root);
+        this.scene.setFill(Color.BLACK);
 
-        root.requestFocus();
+        this.root.requestFocus();
 
-        // Create game controller and bind events from view
-        GameController gameController = new GameController(this);
-        root.setOnKeyPressed(new EventHandler<KeyEvent>() {
+        this.gameController = new GameController(this);
+        this.root.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 gameController.handle(event);
+                if (event.getCode() == KeyCode.ESCAPE) {
+                    viewManager.setView(ViewManager.State.MAIN);
+                }
             }
         });
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                gameController.handle(event);
-            }
-        });
-        ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> {
-            double factorY = (stage.getHeight() - 30) / ((double)this.cellLayer.getGridHeight() + 120);
-            double factorX = stage.getWidth() / (double)this.cellLayer.getGridWidth();
-            double factor = Math.min(2.0, Math.min(factorY, factorX));
-            root.setScaleX(factor);
-            root.setScaleY(factor);
-        };
-        stageSizeListener.changed(null, null, null);
-        stage.widthProperty().addListener(stageSizeListener);
-        stage.heightProperty().addListener(stageSizeListener);
+    }
+
+    @Override
+    public void terminate() {
+        this.gameController.terminate();
+    }
+
+    @Override
+    public Scene getScene() {
+        return this.scene;
+    }
+
+    @Override
+    public void onSizeChanged(int width, int height) {
+        double factorY = ((double)height - 30) / ((double)this.cellLayer.getGridHeight() + 120);
+        double factorX = (double)width / (double)this.cellLayer.getGridWidth();
+        double factor = Math.min(2.0, Math.min(factorY, factorX));
+        root.setScaleX(factor);
+        root.setScaleY(factor);
+    }
+    @Override
+    public void onWindowEvent(WindowEvent event) {
+
     }
 
     public void setController(PacmanController controller) {
