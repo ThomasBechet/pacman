@@ -53,8 +53,18 @@ public class Pacman extends MovableEntity {
 
     public void setHero(boolean hero) {
         this.hero = hero;
-        System.out.println("setHero");
         timeHero = 0;
+    }
+
+    @Override
+    public void update(long timeElapsed) {
+        if (hero) {
+            timeHero += timeElapsed;
+            if (timeHero >= 10000) {
+                hero = false;
+            }
+        }
+        super.update(timeElapsed);
     }
 
     public boolean isHero() {

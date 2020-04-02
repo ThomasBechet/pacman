@@ -40,7 +40,7 @@ public class MovableEntity extends Entity {
     }
 
     @Override
-    public void update() {
+    public void update(long timeElapsed) {
         this.grid.move(this, this.direction);
 
         this.tick();

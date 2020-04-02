@@ -68,13 +68,13 @@ public class Sequencer implements Runnable {
                     // Update movable entities if needed
                     this.movableEntities.replace(movableEntity, new Duration(duration.toMillis() + timeElapsed));
                     if (duration.greaterThanOrEqualTo(new Duration(movableEntity.getSpeed()))) {
-                        entity.update();
+                        entity.update((long)(duration.toMillis()));
                         this.movableEntities.replace(movableEntity, new Duration(0));
                     }
 
                 } else {
                     // Other entities are simply updated
-                    entity.update();
+                    entity.update(timeElapsed);
                 }
             }
 

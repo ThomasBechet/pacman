@@ -45,6 +45,17 @@ public class Ghost extends MovableEntity {
     }
 
     @Override
+    public void update(long timeElapsed) {
+        if (panic) {
+            panicTime -= timeElapsed;
+            if (panicTime <= 0) {
+                panic = false;
+            }
+        }
+        super.update(timeElapsed);
+    }
+
+    @Override
     public void tick() {
         ArrayList<Direction> dir = new ArrayList<Direction>();
         int down = 0, up = 0, left = 0, right = 0;

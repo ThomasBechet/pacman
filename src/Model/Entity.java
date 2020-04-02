@@ -7,5 +7,5 @@ public abstract class Entity {
         this.grid = grid;
     }
 
-    public abstract void update();
+    public abstract void update(long timeElapsed);
 }
