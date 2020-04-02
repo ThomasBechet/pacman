@@ -30,7 +30,6 @@ public class ViewManager implements ChangeListener<Number>, EventHandler<WindowE
         this.stage.setOnCloseRequest(this);
         this.stage.widthProperty().addListener(this);
         this.stage.heightProperty().addListener(this);
-        this.changed(null, null, null);
     }
 
     @Override
@@ -65,5 +64,6 @@ public class ViewManager implements ChangeListener<Number>, EventHandler<WindowE
         }
 
         this.stage.setScene(this.currentView.getScene());
+        this.changed(null, null, null);
     }
 }
