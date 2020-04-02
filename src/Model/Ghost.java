@@ -59,13 +59,16 @@ public class Ghost extends MovableEntity {
     public void tick() {
         ArrayList<Direction> dir = new ArrayList<Direction>();
         int down = 0, up = 0, left = 0, right = 0;
+        int baseConstante = 25;
+        if (this.panic)
+            baseConstante = 400;
         if (grid.canMove(this, Direction.UP)) {
             dir.add(Direction.UP);
             for (Pacman pacman : grid.getPacmans()) {
                 if (grid.getEntityPosition(this).y > grid.getEntityPosition(pacman).y) {
                     up += 100;
                 } else {
-                    up += 25;
+                    up += baseConstante;
                 }
             }
             if (this.getDirection() == Direction.DOWN) {
@@ -78,7 +81,7 @@ public class Ghost extends MovableEntity {
                 if (grid.getEntityPosition(this).x < grid.getEntityPosition(pacman).x) {
                     right += 100;
                 } else {
-                    right += 25;
+                    right += baseConstante;
                 }
             }
             if (this.getDirection() == Direction.LEFT) {
@@ -91,7 +94,7 @@ public class Ghost extends MovableEntity {
                 if (grid.getEntityPosition(this).y < grid.getEntityPosition(pacman).y) {
                     down += 100;
                 } else {
-                    down += 25;
+                    down += baseConstante;
                 }
             }
             if (this.getDirection() == Direction.UP) {
@@ -104,7 +107,7 @@ public class Ghost extends MovableEntity {
                 if (grid.getEntityPosition(this).x > grid.getEntityPosition(pacman).x) {
                     left += 100;
                 } else {
-                    left += 25;
+                    left += baseConstante;
                 }
             }
             if (this.getDirection() == Direction.RIGHT) {

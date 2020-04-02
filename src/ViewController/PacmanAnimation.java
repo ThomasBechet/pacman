@@ -18,7 +18,9 @@ public class PacmanAnimation extends MovableEntityAnimation {
         super.update(entity, position);
 
         Direction direction = entity.getDirection();
-        if (direction == Direction.RIGHT) {
+        if (entity.getEntityState().equals(MovableEntity.EntityState.DEAD)) {
+            this.setIndex(4);
+        } else if (direction == Direction.RIGHT) {
             this.setIndex(0);
         } else if (direction == Direction.DOWN) {
             this.setIndex(1);

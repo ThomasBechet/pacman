@@ -38,7 +38,7 @@ public class GhostAnimation extends MovableEntityAnimation {
 
         Direction direction = entity.getDirection();
         if (((Ghost)entity).isPanic()) {
-            if (((Ghost) entity).getPanicTime() < 3000 && ((Ghost) entity).getPanicTime() % 1000 < 500) {
+            if (((Ghost) entity).getPanicTime() < 3000 && ((Ghost) entity).getPanicTime() % 200 < 100) {
                 this.setIndex(5);
             } else {
                 this.setIndex(4);
