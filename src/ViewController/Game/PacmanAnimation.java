@@ -8,7 +8,7 @@ import javafx.scene.image.Image;
 import java.awt.*;
 
 public class PacmanAnimation extends MovableEntityAnimation {
-    public final static Image imagePacman = new javafx.scene.image.Image("Assets/Pacman.png");
+    public final static Image imagePacman = Sprite.resample(new javafx.scene.image.Image("Assets/Pacman.png"));
 
     public PacmanAnimation() {
         super(imagePacman);

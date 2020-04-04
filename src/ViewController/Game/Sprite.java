@@ -5,10 +5,10 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.image.*;
 
 public class Sprite extends ImageView {
-    public final static int SCALE_FACTOR = 3;
+    public final static int SCALE_FACTOR = 1;
     public final static int TILE_SIZE = 20;
 
-    private final static Image resample(Image input) {
+    public final static Image resample(Image input) {
         final int W = (int)input.getWidth();
         final int H = (int)input.getHeight();
         final int S = SCALE_FACTOR;
@@ -39,7 +39,8 @@ public class Sprite extends ImageView {
         this.setFitWidth(TILE_SIZE);
     }
     public Sprite(Image spriteSheet) {
-        super(resample(spriteSheet));
+        //super(resample(spriteSheet));
+        super(spriteSheet);
 
         this.setFitHeight(TILE_SIZE);
         this.setFitWidth(TILE_SIZE);
@@ -54,7 +55,8 @@ public class Sprite extends ImageView {
 
     public void setSpriteSheet(Image spriteSheet) {
         Platform.runLater(() -> {
-            this.setImage(resample(spriteSheet));
+            // Sprite sheet should be resampled
+            this.setImage(spriteSheet);
         });
     }
 }

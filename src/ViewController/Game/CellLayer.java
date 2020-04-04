@@ -10,12 +10,12 @@ public class CellLayer extends GridPane {
     private Sprite[][] sprites;
     private Cell[][] cells;
 
-    private final static Image imageFloor = new Image("Assets/Floor.png");
-    private final static Image imageFloorPacgumBase = new Image("Assets/FloorPacgumBase.png");
-    private final static Image imageFloorPacgumFruit = new Image("Assets/FloorPacgumFruit.png");
-    private final static Image imageFloorPacgumSuper = new Image("Assets/FloorPacgumSuper.png");
-    private final static Image imageWall = new Image("Assets/Walls.png");
-    private final static Image imageDoor = new Image("Assets/Door.png");
+    private final static Image imageFloor = Sprite.resample(new Image("Assets/Floor.png"));
+    private final static Image imageFloorPacgumBase = Sprite.resample(new Image("Assets/FloorPacgumBase.png"));
+    private final static Image imageFloorPacgumFruit = Sprite.resample(new Image("Assets/FloorPacgumFruit.png"));
+    private final static Image imageFloorPacgumSuper = Sprite.resample(new Image("Assets/FloorPacgumSuper.png"));
+    private final static Image imageWall = Sprite.resample(new Image("Assets/Walls.png"));
+    private final static Image imageDoor = Sprite.resample(new Image("Assets/Door.png"));
 
     public int getGridWidth() {
         return this.cells.length * Sprite.TILE_SIZE;
