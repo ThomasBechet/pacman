@@ -1,7 +1,8 @@
-package ViewController;
+package ViewController.Game;
 
 import Model.Direction;
 import Model.MovableEntity;
+import ViewController.Game.MovableEntityAnimation;
 import javafx.scene.image.Image;
 
 import java.awt.*;

@@ -1,7 +1,6 @@
-package ViewController;
+package ViewController.Game;
 
 import Model.Entity;
-import Model.EntityListener;
 import Model.Pacman;
 import Model.PacmanController;
 import javafx.application.Platform;
@@ -14,11 +13,6 @@ import javafx.scene.text.Text;
 import java.awt.*;
 
 public class PlayerInfo extends GridPane {
-
-    static {
-        Font.loadFont(ClassLoader.getSystemResource("Assets/upheavtt.ttf").toExternalForm(), 50);
-    }
-
     private PacmanController pacmanController;
     private Text playerText;
     private Text scoreText;

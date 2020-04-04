@@ -1,7 +1,8 @@
-package ViewController;
+package ViewController.Game;
 
 import Model.Direction;
 import Model.MovableEntity;
+import ViewController.Game.AnimationImage;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;

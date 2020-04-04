@@ -1,4 +1,4 @@
-package ViewController;
+package ViewController.Game;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

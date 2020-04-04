@@ -1,4 +1,4 @@
-package ViewController;
+package ViewController.Game;
 
 import Model.Direction;
 import Model.Ghost;

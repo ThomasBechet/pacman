@@ -1,4 +1,4 @@
-package ViewController;
+package ViewController.Game;
 
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;

@@ -1,8 +1,7 @@
-package ViewController;
+package ViewController.Game;
 
 import Model.*;
 import javafx.scene.input.KeyCode;
-import javafx.stage.WindowEvent;
 
 public class GameController {
     private GameView view;
