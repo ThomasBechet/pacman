@@ -3,14 +3,15 @@ package Model;
 import java.awt.*;
 
 public class MovableEntity extends Entity {
-    private boolean isMoving;
-    private Direction direction;
-    private int speed;
     public enum EntityState {
         DEAD,
         ALIVE,
         PENDING
     }
+
+    private boolean isMoving;
+    private Direction direction;
+    private int speed;
     private EntityState entityState;
 
     public MovableEntity(Grid grid) {

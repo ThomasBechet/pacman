@@ -1,0 +1,6 @@
+cell@
+floor@
+
+map@
+pacman@id=123;x=10;y=32;lifes=3;score=10332;hero=false
+ghost@id=23;x=10;y=10;

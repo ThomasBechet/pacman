@@ -35,13 +35,14 @@ public class JoinView extends View {
         TextField ipTextField = new TextField();
         ipTextField.setText("0.0.0.0");
         ipTextField.setFont(Font.font("Upheaval TT (BRK)", 60));
-        this.root.add(ipTextField, 0, 0, 1, 1);
+        this.root.add(ipTextField, 0, 0, 2, 1);
 
         Button joinButton = new Button();
         joinButton.setText("Join");
         joinButton.setFont(Font.font("Upheaval TT (BRK)", 60));
         joinButton.setStyle("-fx-background-color: transparent;");
         joinButton.setTextFill(Color.WHITE);
+        joinButton.setAlignment(Pos.CENTER);
         joinButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -62,12 +63,11 @@ public class JoinView extends View {
                 }
             }
         });
-        this.root.add(joinButton, 1, 0, 1, 1);
+        this.root.add(joinButton, 1, 1, 1, 1);
 
         // Back
         Button backButton = new Button();
         backButton.setText("Back");
-        backButton.setAlignment(Pos.CENTER);
         backButton.setFont(Font.font("Upheaval TT (BRK)", 60));
         backButton.setStyle("-fx-background-color: transparent;");
         backButton.setTextFill(Color.WHITE);
@@ -77,7 +77,7 @@ public class JoinView extends View {
                 viewManager.setView(ViewManager.State.JOIN_CREATE_SERVER);
             }
         });
-        this.root.add(backButton, 0, 1, 2, 1);
+        this.root.add(backButton, 0, 1, 1, 1);
 
         this.root.requestFocus();
     }
