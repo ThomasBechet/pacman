@@ -14,6 +14,10 @@ public class MovableEntityMessage extends EntityMessage {
 
     public MovableEntityMessage(MovableEntity entity, Point position, Integer id) {
         super(entity, position, id);
+        this.direction = entity.getDirection();
+        this.isMoving = entity.isMoving();
+        this.speed = entity.getSpeed();
+        this.entityState = entity.getEntityState();
     }
 
     public MovableEntityMessage(Parameter[] parameters) {

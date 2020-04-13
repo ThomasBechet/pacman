@@ -2,10 +2,10 @@ package ViewController.Game;
 
 import Model.Direction;
 import Model.Ghost;
-import Model.MovableEntity;
+import Network.Messages.GhostMessage;
+import Network.Messages.MovableEntityMessage;
 import javafx.scene.image.Image;
 
-import java.awt.*;
 
 public class GhostAnimation extends MovableEntityAnimation {
     private final static Image imageBlueGhost = Sprite.resample(new Image("Assets/BlueGhost.png"));
@@ -33,12 +33,12 @@ public class GhostAnimation extends MovableEntityAnimation {
     }
 
     @Override
-    public void update(MovableEntity entity, Point position) {
-        super.update(entity, position);
+    public void update(MovableEntityMessage entityMessage) {
+        super.update(entityMessage);
 
-        Direction direction = entity.getDirection();
-        if (((Ghost)entity).isPanic()) {
-            if (((Ghost) entity).getPanicTime() < 3000 && ((Ghost) entity).getPanicTime() % 200 < 100) {
+        Direction direction = entityMessage.direction;
+        if (((GhostMessage)entityMessage).isPanic) {
+            if (((GhostMessage) entityMessage).panicTime < 3000 && ((GhostMessage)entityMessage).panicTime % 200 < 100) {
                 this.setIndex(5);
             } else {
                 this.setIndex(4);

@@ -55,9 +55,7 @@ public class JoinView extends View {
                         viewManager.getParameters().port = 55555;
                     }
 
-                    System.out.println(viewManager.getParameters().address);
-                    System.out.println(viewManager.getParameters().port);
-                    //viewManager.setView(ViewManager.State.GAME);
+                    viewManager.setView(ViewManager.State.GAME);
                 } catch(Exception e) {
                     ipTextField.setText("Invalid format");
                 }

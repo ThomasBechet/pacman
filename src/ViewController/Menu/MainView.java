@@ -5,20 +5,15 @@ import ViewController.ViewManager;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.WindowEvent;
-
-import java.util.Collections;
 
 public class MainView extends View {
     private Scene scene;
@@ -26,6 +21,9 @@ public class MainView extends View {
 
     public MainView(ViewManager viewManager) {
         super(viewManager);
+
+        // Reset parameters
+        viewManager.getParameters().reset();
 
         this.root = new FlowPane();
         this.root.setAlignment(Pos.CENTER);
@@ -52,7 +50,8 @@ public class MainView extends View {
         soloButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                viewManager.setView(ViewManager.State.MAP_SELECTION);
+                viewManager.getParameters().solo = true;
+                viewManager.setView(ViewManager.State.SOLO);
             }
         });
         this.root.getChildren().add(soloButton);
@@ -66,6 +65,7 @@ public class MainView extends View {
         multiplayerButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                viewManager.getParameters().solo = false;
                 viewManager.setView(ViewManager.State.JOIN_CREATE_SERVER);
             }
         });

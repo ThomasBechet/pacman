@@ -3,6 +3,8 @@ package ViewController.Game;
 import Model.Entity;
 import Model.Pacman;
 import Model.PacmanController;
+import Network.Messages.EntityMessage;
+import Network.Messages.PacmanMessage;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.layout.*;
@@ -45,18 +47,18 @@ public class PlayerInfo extends GridPane {
         this.playerText.setText("Player " + (controller.getIndex() + 1));
     }
 
-    public void updateEntity(Entity entity, Point position) {
-        if (this.pacmanController != null && entity == this.pacmanController.getPacman()) {
-            Pacman pacman = (Pacman)entity;
+    public void updateEntity(EntityMessage message) {
+        if (this.pacmanController != null && message.id == this.pacmanController.getEntityId()) {
+            PacmanMessage pacmanMessage = (PacmanMessage)message;
 
             Platform.runLater(() -> {
-                this.scoreText.setText(Integer.toString(pacman.getScore()));
+                this.scoreText.setText(Integer.toString(pacmanMessage.score));
             });
 
-            if (pacman.getLifeCount() != this.flowPane.getChildren().size()) {
+            if (pacmanMessage.lifes != this.flowPane.getChildren().size()) {
                 Platform.runLater(() -> {
                     this.flowPane.getChildren().clear();
-                    for (int i = 0; i < pacman.getLifeCount(); i++) {
+                    for (int i = 0; i < pacmanMessage.lifes; i++) {
                         Sprite sprite = new Sprite();
                         sprite.setSpriteSheet(PacmanAnimation.imagePacman);
                         sprite.setFrame(0, 0);

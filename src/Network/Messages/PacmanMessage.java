@@ -1,7 +1,5 @@
 package Network.Messages;
 
-import Model.Direction;
-import Model.MovableEntity;
 import Model.Pacman;
 import Network.Parameter;
 
@@ -11,9 +9,13 @@ public class PacmanMessage extends MovableEntityMessage {
     public int lifes;
     public int score;
     public boolean hero;
+    public int timeHero;
 
     public PacmanMessage(Pacman pacman, Point position, Integer id) {
         super(pacman, position, id);
+        this.lifes = pacman.getLifeCount();
+        this.score = pacman.getScore();
+        this.hero = pacman.isHero();
     }
 
     public PacmanMessage(Parameter[] parameters) {
@@ -30,6 +32,9 @@ public class PacmanMessage extends MovableEntityMessage {
                 case "hero":
                     this.hero = parameter.value.equals("true");
                     break;
+                case "timeHero":
+                    this.timeHero = Integer.parseInt(parameter.value);
+                    break;
             }
         }
     }
@@ -44,6 +49,7 @@ public class PacmanMessage extends MovableEntityMessage {
         } else {
             s += ";hero=false";
         }
+        s += ";timeHero=" + this.timeHero;
 
         return "pacman@" + super.toString() + s;
     }

@@ -7,8 +7,15 @@ package ViewController.Game;
 
 import Model.*;
 
+import Network.Client;
+import Network.MessageListener;
+import Network.Messages.CellMessage;
+import Network.Messages.EntityMessage;
+import Network.Messages.MapMessage;
+import Network.Server;
 import ViewController.View;
 import ViewController.ViewManager;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -20,8 +27,10 @@ import javafx.scene.paint.Color;
 import javafx.stage.WindowEvent;
 
 import java.awt.*;
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 
-public class GameView extends View implements MapListener, CellListener, EntityListener {
+public class GameView extends View implements MessageListener {
     private Scene scene;
     private StackPane root;
     private FlowPane playerInfoPane;
@@ -30,6 +39,9 @@ public class GameView extends View implements MapListener, CellListener, EntityL
     private EntityLayer entityLayer;
     private GridPane gridPane;
     private GameController gameController;
+
+    private Server server;
+    private Client client;
 
     public GameView(ViewManager viewManager) {
         super(viewManager);
@@ -59,11 +71,47 @@ public class GameView extends View implements MapListener, CellListener, EntityL
 
         this.root.requestFocus();
 
-        this.gameController = new GameController(this);
+        //this.gameController = new GameController(this);
+        if (viewManager.getParameters().solo) {
+            try {
+                this.server = new Server();
+                this.server.open(55555, "src/Maps/map2.txt", 1);
+                this.client = new Client(this);
+                this.client.connect((Inet4Address) Inet4Address.getLocalHost(), 55555);
+            } catch (UnknownHostException e) {}
+        } else {
+            if (viewManager.getParameters().address != null) { // join
+                this.client = new Client(this);
+                this.client.connect(viewManager.getParameters().address, viewManager.getParameters().port);
+            } else { // create
+                this.server = new Server();
+                this.server.open(
+                        viewManager.getParameters().port,
+                        viewManager.getParameters().map,
+                        viewManager.getParameters().playerCount);
+                this.client = new Client(this);
+                try {
+                    this.client.connect((Inet4Address)Inet4Address.getLocalHost(), viewManager.getParameters().port);
+                } catch (UnknownHostException e) {}
+            }
+        }
+
         this.root.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                gameController.handle(event);
+                //gameController.handle(event);
+
+                KeyCode code = event.getCode();
+                if (code == KeyCode.Q || code == KeyCode.LEFT) {
+                    client.send(Direction.LEFT);
+                } else if (code == KeyCode.D || code == KeyCode.RIGHT) {
+                    client.send(Direction.RIGHT);
+                } else if (code == KeyCode.Z || code == KeyCode.UP) {
+                    client.send(Direction.UP);
+                } else if (code == KeyCode.S || code == KeyCode.DOWN) {
+                    client.send(Direction.DOWN);
+                }
+
                 if (event.getCode() == KeyCode.ESCAPE) {
                     viewManager.setView(ViewManager.State.MAIN);
                 }
@@ -73,7 +121,9 @@ public class GameView extends View implements MapListener, CellListener, EntityL
 
     @Override
     public void terminate() {
-        this.gameController.terminate();
+        //this.gameController.terminate();
+        if (this.server != null) this.server.close();
+        if (this.client != null) this.client.disconnect();
     }
 
     @Override
@@ -103,21 +153,25 @@ public class GameView extends View implements MapListener, CellListener, EntityL
     }
 
     @Override
-    public void mapUpdated(Cell[][] cells) {
-        this.cellLayer.updateMap(cells);
+    public void onMapMessage(MapMessage message) {
+        Platform.runLater(() -> {
+            this.cellLayer.updateMap(message);
+        });
     }
 
     @Override
-    public void cellUpdated(Cell cell, Point position) {
-        this.cellLayer.updateCell(cell, position);
+    public void onCellMessage(CellMessage message) {
+        Platform.runLater(() -> {
+            this.cellLayer.updateCell(message);
+        });
     }
 
     @Override
-    public void entityUpdated(Entity entity, Point position) {
-        entityLayer.updateEntity(entity, position);
+    public void onEntityMessage(EntityMessage message) {
+        entityLayer.updateEntity(message);
         for (PlayerInfo playerInfo : this.playerInfos) {
             if (playerInfo != null) {
-                playerInfo.updateEntity(entity, position);
+                playerInfo.updateEntity(message);
             }
         }
     }

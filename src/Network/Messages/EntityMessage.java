@@ -6,7 +6,7 @@ import Network.Parameter;
 import java.awt.*;
 
 public class EntityMessage extends Message {
-    public Point position;
+    public Point position = new Point();
     public int id;
 
     public EntityMessage(Entity entity, Point position, int id) {

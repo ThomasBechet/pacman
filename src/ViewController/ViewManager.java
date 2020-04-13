@@ -1,10 +1,7 @@
 package ViewController;
 
 import ViewController.Game.GameView;
-import ViewController.Menu.JoinCreateView;
-import ViewController.Menu.JoinView;
-import ViewController.Menu.MainView;
-import ViewController.Menu.MapSelectionView;
+import ViewController.Menu.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -22,21 +19,26 @@ public class ViewManager implements ChangeListener<Number>, EventHandler<WindowE
 
     public enum State {
         MAIN,
-        MAP_SELECTION,
         GAME,
+        SOLO,
         JOIN_CREATE_SERVER,
-        SERVER_CONNECTION
+        JOIN,
+        CREATE
     }
 
     public class Parameters {
-        public Integer port;
+        public boolean solo;
         public Inet4Address address;
         public String map;
+        public int playerCount;
+        public int port;
 
         public void reset() {
-            this.port = null;
+            this.solo = true;
             this.address = null;
             this.map = null;
+            this.playerCount = 1;
+            this.port = 55555;
         }
     }
 
@@ -86,14 +88,16 @@ public class ViewManager implements ChangeListener<Number>, EventHandler<WindowE
 
         if (state == State.MAIN) {
             this.currentView = new MainView(this);
-        } else if (state == State.MAP_SELECTION) {
-            this.currentView = new MapSelectionView(this);
+        } else if (state == State.SOLO) {
+            this.currentView = new SoloView(this);
         } else if (state == State.GAME) {
             this.currentView = new GameView(this);
         } else if (state == State.JOIN_CREATE_SERVER) {
             this.currentView = new JoinCreateView(this);
-        } else if (state == State.SERVER_CONNECTION) {
+        } else if (state == State.JOIN) {
             this.currentView = new JoinView(this);
+        } else if (state == State.CREATE) {
+            this.currentView = new CreateView(this);
         }
 
         this.stage.setScene(this.currentView.getScene());

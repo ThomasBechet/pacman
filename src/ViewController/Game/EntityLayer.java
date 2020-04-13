@@ -1,17 +1,21 @@
 package ViewController.Game;
 
 import Model.*;
+import Network.Messages.EntityMessage;
+import Network.Messages.GhostMessage;
+import Network.Messages.MovableEntityMessage;
+import Network.Messages.PacmanMessage;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
 public class EntityLayer {
     private CellLayer cellLayer;
     private StackPane pane;
-    private Map<Entity, Sprite> sprites;
+    private Map<Integer, Sprite> sprites;
 
     public EntityLayer(CellLayer cellLayer) {
         this.cellLayer = cellLayer;
@@ -23,27 +27,30 @@ public class EntityLayer {
         this.pane.setAlignment(Pos.CENTER);
     }
 
-    public void updateEntity(Entity entity, Point position) {
-        Sprite sprite = this.sprites.get(entity);
+    public void updateEntity(EntityMessage entityMessage) {
+        Sprite sprite = this.sprites.get(entityMessage.id);
         if (sprite == null) {
-            if (entity instanceof Pacman) {
+            if (entityMessage instanceof PacmanMessage) {
                 sprite = new PacmanAnimation();
                 //sprite = new GhostAnimation(Ghost.BLUE);
-            } else if (entity instanceof Ghost) {
-                sprite = new GhostAnimation(((Ghost)entity).getId());
+            } else if (entityMessage instanceof GhostMessage) {
+                sprite = new GhostAnimation(((GhostMessage)entityMessage).ghostId);
             }
 
-            sprite.setTranslateX(position.x * Sprite.TILE_SIZE); // Initial position
-            sprite.setTranslateY(position.y * Sprite.TILE_SIZE); // Initial position
+            sprite.setTranslateX(entityMessage.position.x * Sprite.TILE_SIZE); // Initial position
+            sprite.setTranslateY(entityMessage.position.y * Sprite.TILE_SIZE); // Initial position
 
-            this.pane.getChildren().add(sprite);
-            this.sprites.put(entity, sprite);
-            sprite.toFront();
+            this.sprites.put(entityMessage.id, sprite);
+            Platform.runLater(() -> {
+                Sprite addedSprite = this.sprites.get(entityMessage.id);
+                this.pane.getChildren().add(addedSprite);
+                addedSprite.toFront();
+            });
         }
 
-        if (entity instanceof Pacman || entity instanceof Ghost) {
+        if (entityMessage instanceof PacmanMessage || entityMessage instanceof GhostMessage) {
             MovableEntityAnimation movableEntityAnimation = (MovableEntityAnimation)sprite;
-            movableEntityAnimation.update((MovableEntity)entity, position);
+            movableEntityAnimation.update((MovableEntityMessage)entityMessage);
         }
     }
 }

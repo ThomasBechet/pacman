@@ -2,6 +2,7 @@ package ViewController.Game;
 
 import Model.Direction;
 import Model.MovableEntity;
+import Network.Messages.MovableEntityMessage;
 import ViewController.Game.MovableEntityAnimation;
 import javafx.scene.image.Image;
 
@@ -15,11 +16,11 @@ public class PacmanAnimation extends MovableEntityAnimation {
     }
 
     @Override
-    public void update(MovableEntity entity, Point position) {
-        super.update(entity, position);
+    public void update(MovableEntityMessage entityMessage) {
+        super.update(entityMessage);
 
-        Direction direction = entity.getDirection();
-        if (entity.getEntityState().equals(MovableEntity.EntityState.DEAD)) {
+        Direction direction = entityMessage.direction;
+        if (entityMessage.entityState.equals(MovableEntity.EntityState.DEAD)) {
             this.setIndex(4);
         } else if (direction == Direction.RIGHT) {
             this.setIndex(0);

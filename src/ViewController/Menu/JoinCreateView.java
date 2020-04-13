@@ -38,7 +38,7 @@ public class JoinCreateView extends View {
         joinButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                viewManager.setView(ViewManager.State.SERVER_CONNECTION);
+                viewManager.setView(ViewManager.State.JOIN);
             }
         });
         this.root.getChildren().add(joinButton);
@@ -52,7 +52,7 @@ public class JoinCreateView extends View {
         createButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                viewManager.setView(ViewManager.State.MAP_SELECTION);
+                viewManager.setView(ViewManager.State.CREATE);
             }
         });
         this.root.getChildren().add(createButton);

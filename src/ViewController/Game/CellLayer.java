@@ -1,6 +1,7 @@
 package ViewController.Game;
 
 import Model.*;
+import Network.Messages.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 
@@ -8,7 +9,7 @@ import java.awt.*;
 
 public class CellLayer extends GridPane {
     private Sprite[][] sprites;
-    private Cell[][] cells;
+    private boolean[][] walls;
 
     private final static Image imageFloor = Sprite.resample(new Image("Assets/Floor.png"));
     private final static Image imageFloorPacgumBase = Sprite.resample(new Image("Assets/FloorPacgumBase.png"));
@@ -18,20 +19,28 @@ public class CellLayer extends GridPane {
     private final static Image imageDoor = Sprite.resample(new Image("Assets/Door.png"));
 
     public int getGridWidth() {
-        return this.cells.length * Sprite.TILE_SIZE;
+        if (this.sprites != null) {
+            return this.sprites.length * Sprite.TILE_SIZE;
+        } else {
+            return 0;
+        }
     }
     public int getGridHeight() {
-        return this.cells[0].length * Sprite.TILE_SIZE;
+        if (this.sprites != null) {
+            return this.sprites[0].length * Sprite.TILE_SIZE;
+        } else {
+            return 0;
+        }
     }
 
-    public void updateCell(Cell cell, Point position) {
-        Sprite sprite = this.sprites[position.x][position.y];
-        if (cell instanceof Wall) {
-            this.buildWall(sprite, position);
-        } else if (cell instanceof Floor) {
-            Floor floor = (Floor)cell;
-            if (floor.hasPacgum()) {
-                PacgumType type = floor.getPacgum().getType();
+    public void updateCell(CellMessage cellMessage) {
+        Sprite sprite = this.sprites[cellMessage.position.x][cellMessage.position.y];
+        if (cellMessage instanceof WallMessage) {
+            this.buildWall(sprite, cellMessage.position);
+        } else if (cellMessage instanceof FloorMessage) {
+            FloorMessage floorMessage = (FloorMessage)cellMessage;
+            if (floorMessage.hasPacgum) {
+                PacgumType type = floorMessage.pacgumType;
                 if (type == PacgumType.BASE) {
                     sprite.setSpriteSheet(imageFloorPacgumBase);
                 } else if (type == PacgumType.FRUIT) {
@@ -42,29 +51,31 @@ public class CellLayer extends GridPane {
             } else {
                 sprite.setSpriteSheet(imageFloor);
             }
-        } else if (cell instanceof Door) {
+        } else if (cellMessage instanceof DoorMessage) {
             sprite.setSpriteSheet(imageDoor);
-            if (((Door) cell).getColor() == Ghost.BLUE)
+            if (((DoorMessage) cellMessage).color == Ghost.BLUE)
                 sprite.setFrame(1, 0);
-            else if (((Door) cell).getColor() == Ghost.ORANGE)
+            else if (((DoorMessage) cellMessage).color == Ghost.ORANGE)
                 sprite.setFrame(2,0);
-            else if (((Door) cell).getColor() == Ghost.PINK)
+            else if (((DoorMessage) cellMessage).color == Ghost.PINK)
                 sprite.setFrame(3, 0);
-            else if (((Door) cell).getColor() == Ghost.RED)
+            else if (((DoorMessage) cellMessage).color == Ghost.RED)
                 sprite.setFrame(4, 0);
             else
                 sprite.setFrame(0, 0);
         }
     }
 
-    public void updateMap(Cell[][] cells) {
-        this.cells = cells;
-        this.sprites = new Sprite[cells.length][cells[0].length];
-        for (int x = 0; x < cells.length; x++) {
-            for (int y = 0; y < cells[0].length; y++) {
+    public void updateMap(MapMessage mapMessage) {
+        this.sprites = new Sprite[mapMessage.width][mapMessage.height];
+        this.walls = mapMessage.walls;
+        for (int x = 0; x < mapMessage.width; x++) {
+            for (int y = 0; y < mapMessage.height; y++) {
                 this.sprites[x][y] = new Sprite();
-                this.updateCell(cells[x][y], new Point(x, y));
                 this.add(this.sprites[x][y], x, y);
+                if (this.walls[x][y]) {
+                    this.buildWall(this.sprites[x][y], new Point(x, y));
+                }
                 this.sprites[x][y].toBack();
             }
         }
@@ -73,10 +84,10 @@ public class CellLayer extends GridPane {
     private void buildWall(Sprite sprite, Point position) {
         sprite.setSpriteSheet(imageWall);
 
-        boolean left = position.x <= 0 || (this.cells[position.x - 1][position.y] instanceof Wall);
-        boolean right = position.x >= this.cells.length - 1 || (this.cells[position.x + 1][position.y] instanceof Wall);
-        boolean up = position.y <= 0 || (this.cells[position.x][position.y - 1] instanceof Wall);
-        boolean down = position.y >= this.cells[0].length - 1 || (this.cells[position.x][position.y + 1] instanceof Wall);
+        boolean left = position.x <= 0 || (this.walls[position.x - 1][position.y]);
+        boolean right = position.x >= this.walls.length - 1 || (this.walls[position.x + 1][position.y]);
+        boolean up = position.y <= 0 || (this.walls[position.x][position.y - 1]);
+        boolean down = position.y >= this.walls[0].length - 1 || (this.walls[position.x][position.y + 1]);
 
         if (!left && !right && !up && !down) {
             sprite.setFrame(0, 0);

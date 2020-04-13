@@ -6,7 +6,7 @@ import Network.Parameter;
 import java.awt.*;
 
 public class CellMessage extends Message {
-    public Point position;
+    public Point position = new Point();
 
     public CellMessage(Cell cell, Point position) {
         this.position = position;

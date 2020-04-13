@@ -1,8 +1,7 @@
 package ViewController.Game;
 
 import Model.Direction;
-import Model.MovableEntity;
-import ViewController.Game.AnimationImage;
+import Network.Messages.MovableEntityMessage;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -46,13 +45,13 @@ public class MovableEntityAnimation extends AnimationImage {
         this.timeline.setAutoReverse(false);
     }
 
-    public void update(MovableEntity entity, Point position) {
+    public void update(MovableEntityMessage entityMessage) {
 
         synchronized (this.timeline) {
-            this.duration = entity.getSpeed();
-            Direction direction = entity.getDirection();
-            if (entity.isMoving()) {
-                this.start = new Point(position.x * 20, position.y * 20);
+            this.duration = entityMessage.speed;
+            Direction direction = entityMessage.direction;
+            if (entityMessage.isMoving) {
+                this.start = new Point(entityMessage.position.x * 20, entityMessage.position.y * 20);
                 if (direction == Direction.RIGHT) {
                     this.stop = new Point(this.start.x + 20, this.start.y);
                 } else if (direction == Direction.DOWN) {

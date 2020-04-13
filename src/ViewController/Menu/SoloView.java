@@ -13,14 +13,13 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.WindowEvent;
 
-public class MapSelectionView extends View {
+public class SoloView extends View {
     private Scene scene;
     private FlowPane root;
 
-    public MapSelectionView(ViewManager viewManager) {
+    public SoloView(ViewManager viewManager) {
         super(viewManager);
 
         this.root = new FlowPane();

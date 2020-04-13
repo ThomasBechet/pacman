@@ -13,9 +13,9 @@ public class GameController {
         this.view = view;
         this.game = new Game();
 
-        this.game.setMapListener(view);
-        this.game.setCellListener(view);
-        this.game.setEntityListener(view);
+        //this.game.setMapListener(view);
+        //this.game.setCellListener(view);
+        //this.game.setEntityListener(view);
 
         this.player1 = new PacmanController();
         PacmanController player2 = new PacmanController();

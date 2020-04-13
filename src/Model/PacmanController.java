@@ -17,6 +17,8 @@ public class PacmanController {
         return this.index;
     }
 
+    public int getEntityId() { return 0; }
+
     public void setup(Pacman pacman, int index) {
         this.pacman = pacman;
         this.index = index;
