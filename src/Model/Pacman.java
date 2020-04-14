@@ -6,14 +6,20 @@ public class Pacman extends MovableEntity {
     private int score;
     private boolean hero;
     private int timeHero;
+    private int controller;
 
-    public Pacman(Grid grid, int lifeCount) {
+    public Pacman(Grid grid, int lifeCount, int controller) {
         super(grid);
 
         this.wantedDirection = this.getDirection();
         this.lifes = lifeCount;
         this.score = 0;
         this.hero = false;
+        this.controller = controller;
+    }
+
+    public int getControllerId() {
+        return this.controller;
     }
 
     public void setWantedDirection(Direction direction) {

@@ -10,12 +10,14 @@ public class PacmanMessage extends MovableEntityMessage {
     public int score;
     public boolean hero;
     public int timeHero;
+    public int controllerId;
 
     public PacmanMessage(Pacman pacman, Point position, Integer id) {
         super(pacman, position, id);
         this.lifes = pacman.getLifeCount();
         this.score = pacman.getScore();
         this.hero = pacman.isHero();
+        this.controllerId = pacman.getControllerId();
     }
 
     public PacmanMessage(Parameter[] parameters) {
@@ -35,6 +37,9 @@ public class PacmanMessage extends MovableEntityMessage {
                 case "timeHero":
                     this.timeHero = Integer.parseInt(parameter.value);
                     break;
+                case "controllerId":
+                    this.controllerId = Integer.parseInt(parameter.value);
+                    break;
             }
         }
     }
@@ -50,6 +55,7 @@ public class PacmanMessage extends MovableEntityMessage {
             s += ";hero=false";
         }
         s += ";timeHero=" + this.timeHero;
+        s += ";controllerId=" + this.controllerId;
 
         return "pacman@" + super.toString() + s;
     }

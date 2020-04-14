@@ -12,6 +12,7 @@ import Network.MessageListener;
 import Network.Messages.CellMessage;
 import Network.Messages.EntityMessage;
 import Network.Messages.MapMessage;
+import Network.Messages.PacmanMessage;
 import Network.Server;
 import ViewController.View;
 import ViewController.ViewManager;
@@ -26,7 +27,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.WindowEvent;
 
-import java.awt.*;
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
 
@@ -38,7 +38,6 @@ public class GameView extends View implements MessageListener {
     private CellLayer cellLayer;
     private EntityLayer entityLayer;
     private GridPane gridPane;
-    private GameController gameController;
 
     private Server server;
     private Client client;
@@ -71,7 +70,6 @@ public class GameView extends View implements MessageListener {
 
         this.root.requestFocus();
 
-        //this.gameController = new GameController(this);
         if (viewManager.getParameters().solo) {
             try {
                 this.server = new Server();
@@ -99,8 +97,6 @@ public class GameView extends View implements MessageListener {
         this.root.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                //gameController.handle(event);
-
                 KeyCode code = event.getCode();
                 if (code == KeyCode.Q || code == KeyCode.LEFT) {
                     client.send(Direction.LEFT);
@@ -121,7 +117,6 @@ public class GameView extends View implements MessageListener {
 
     @Override
     public void terminate() {
-        //this.gameController.terminate();
         if (this.server != null) this.server.close();
         if (this.client != null) this.client.disconnect();
     }
@@ -144,18 +139,11 @@ public class GameView extends View implements MessageListener {
 
     }
 
-    public void setController(PacmanController controller) {
-        if (cellLayer.getGridHeight() >= cellLayer.getGridWidth()) {
-            this.playerInfos[controller.getIndex()] = new PlayerInfo();
-            this.playerInfos[controller.getIndex()].setController(controller);
-            this.playerInfoPane.getChildren().add(this.playerInfos[controller.getIndex()]);
-        }
-    }
-
     @Override
     public void onMapMessage(MapMessage message) {
         Platform.runLater(() -> {
             this.cellLayer.updateMap(message);
+            this.viewManager.changed(null, null, null);
         });
     }
 
@@ -169,9 +157,17 @@ public class GameView extends View implements MessageListener {
     @Override
     public void onEntityMessage(EntityMessage message) {
         entityLayer.updateEntity(message);
-        for (PlayerInfo playerInfo : this.playerInfos) {
-            if (playerInfo != null) {
-                playerInfo.updateEntity(message);
+        if (message instanceof PacmanMessage) {
+            PacmanMessage pacmanMessage = (PacmanMessage)message;
+            if (this.playerInfos[pacmanMessage.controllerId] == null) {
+                if (cellLayer.getGridHeight() >= cellLayer.getGridWidth()) {
+                    this.playerInfos[pacmanMessage.controllerId] = new PlayerInfo(pacmanMessage.controllerId);
+                    Platform.runLater(() -> {
+                        this.playerInfoPane.getChildren().add(this.playerInfos[pacmanMessage.controllerId]);
+                    });
+                }
+            } else {
+                this.playerInfos[pacmanMessage.controllerId].updateEntity(pacmanMessage);
             }
         }
     }

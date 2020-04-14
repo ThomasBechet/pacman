@@ -29,7 +29,7 @@ public class GameController {
         game.setPacmanController(player3, PacmanController.PLAYER_3);
         game.setPacmanController(player4, PacmanController.PLAYER_4);
 
-        view.setController(this.player1);
+        //view.setController(this.player1);
 
         game.start();
     }

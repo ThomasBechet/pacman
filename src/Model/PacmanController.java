@@ -1,6 +1,7 @@
 package Model;
 
 public class PacmanController {
+    public static final int PLAYER_NONE = -1;
     public static final int PLAYER_1 = 0;
     public static final int PLAYER_2 = 1;
     public static final int PLAYER_3 = 2;

@@ -215,10 +215,10 @@ public class Grid {
             this.cells[position.x][position.y] = new Door(Ghost.NONE);
         } else if (Character.isDigit(c)) {
             this.cells[position.x][position.y] = new Floor(null);
-            Pacman pacman = new Pacman(this, 3);
+            int controllerIndex = Character.getNumericValue(c) - 1;
+            Pacman pacman = new Pacman(this, 3, controllerIndex);
             this.addEntity(pacman, position);
-            this.controllers.put(0, pacman);
-            int controllerIndex = Character.getNumericValue(c);
+            this.controllers.put(controllerIndex, pacman);
             if (controllerIndex == 1) {
                 pacman.setSpeed(200);
             } else if (controllerIndex == 2) {

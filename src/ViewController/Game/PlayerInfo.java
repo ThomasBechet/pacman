@@ -12,15 +12,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-import java.awt.*;
-
 public class PlayerInfo extends GridPane {
-    private PacmanController pacmanController;
     private Text playerText;
     private Text scoreText;
     private FlowPane flowPane;
 
-    public PlayerInfo() {
+    public PlayerInfo(int controllerId) {
         this.setMinWidth(100);
         this.setMinHeight(70);
         this.setBorder(new Border(new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, new CornerRadii(5.0), BorderWidths.DEFAULT)));
@@ -40,32 +37,25 @@ public class PlayerInfo extends GridPane {
         this.flowPane = new FlowPane();
         this.flowPane.setMaxSize(Sprite.TILE_SIZE * 4, Sprite.TILE_SIZE);
         this.add(this.flowPane, 0, 2);
+
+        this.playerText.setText("Player " + (controllerId + 1));
     }
 
-    public void setController(PacmanController controller) {
-        this.pacmanController = controller;
-        this.playerText.setText("Player " + (controller.getIndex() + 1));
-    }
+    public void updateEntity(PacmanMessage message) {
+        Platform.runLater(() -> {
+            this.scoreText.setText(Integer.toString(message.score));
+        });
 
-    public void updateEntity(EntityMessage message) {
-        if (this.pacmanController != null && message.id == this.pacmanController.getEntityId()) {
-            PacmanMessage pacmanMessage = (PacmanMessage)message;
-
+        if (message.lifes != this.flowPane.getChildren().size()) {
             Platform.runLater(() -> {
-                this.scoreText.setText(Integer.toString(pacmanMessage.score));
+                this.flowPane.getChildren().clear();
+                for (int i = 0; i < message.lifes; i++) {
+                    Sprite sprite = new Sprite();
+                    sprite.setSpriteSheet(PacmanAnimation.imagePacman);
+                    sprite.setFrame(0, 0);
+                    this.flowPane.getChildren().add(sprite);
+                }
             });
-
-            if (pacmanMessage.lifes != this.flowPane.getChildren().size()) {
-                Platform.runLater(() -> {
-                    this.flowPane.getChildren().clear();
-                    for (int i = 0; i < pacmanMessage.lifes; i++) {
-                        Sprite sprite = new Sprite();
-                        sprite.setSpriteSheet(PacmanAnimation.imagePacman);
-                        sprite.setFrame(0, 0);
-                        this.flowPane.getChildren().add(sprite);
-                    }
-                });
-            }
         }
     }
 }

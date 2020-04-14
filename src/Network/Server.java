@@ -120,9 +120,10 @@ public class Server implements MapListener, CellListener, EntityListener {
             this.game.loadMap(this.map);
 
             // binding clients to controllers (require map being loaded)
-            for (Socket socket : this.clientSockets) {
+            for (int i = 0; i < this.clientSockets.size(); i++) {
+                Socket socket = this.clientSockets.get(i);
                 PacmanController controller = new PacmanController();
-                this.game.setPacmanController(controller, PacmanController.PLAYER_1);
+                this.game.setPacmanController(controller, i);
                 ClientThread clientThread = new ClientThread(socket, controller);
                 this.clientThreads.add(clientThread);
                 clientThread.start();
