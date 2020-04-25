@@ -10,6 +10,7 @@ public abstract class View {
         this.viewManager = viewManager;
     }
 
+    public abstract void initialize();
     public abstract void terminate();
     public abstract Scene getScene();
     public void onSizeChanged(int width, int height) {}

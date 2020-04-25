@@ -12,7 +12,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 
-public class Server implements MapListener, CellListener, EntityListener {
+public class Server implements MapListener, CellListener, EntityListener, GameStateListener {
     private class ClientThread extends Thread {
         private Socket socket;
         private PacmanController controller;
@@ -82,6 +82,7 @@ public class Server implements MapListener, CellListener, EntityListener {
             this.game.setMapListener(this);
             this.game.setCellListener(this);
             this.game.setEntityListener(this);
+            this.game.setGameStateListener(this);
 
             this.thread = new Thread(() -> {routine();});
             this.thread.start();
@@ -113,6 +114,7 @@ public class Server implements MapListener, CellListener, EntityListener {
                     Socket socket = this.socket.accept();
                     System.out.println("new connection from " + socket.toString());
                     this.clientSockets.add(socket);
+                    this.sendToAll((new GameStateMessage(this.clientSockets.size(), this.playerCount)).toString());
                 }
             } catch (IOException e) {}
 
@@ -198,6 +200,12 @@ public class Server implements MapListener, CellListener, EntityListener {
                 this.messages.add(new GhostMessage((Ghost)entity, position, id));
             }
             this.messages.notify();
+        }
+    }
+    @Override
+    public void gameStateUpdated(GameState gameState) {
+        synchronized (this.messages) {
+            this.messages.add(new GameStateMessage(gameState));
         }
     }
 }

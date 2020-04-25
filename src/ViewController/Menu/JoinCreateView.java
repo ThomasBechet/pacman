@@ -75,6 +75,8 @@ public class JoinCreateView extends View {
     }
 
     @Override
+    public void initialize() {}
+    @Override
     public void terminate() {}
     @Override
     public Scene getScene() {

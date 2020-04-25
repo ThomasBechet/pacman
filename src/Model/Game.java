@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 public class Game {
     private Grid grid;
     private Sequencer sequencer;
-    private GameState gameState = GameState.STOPPED;
+    private GameState gameState = new GameState();
     private CellListener cellListener;
     private EntityListener entityListener;
     private GameStateListener gameStateListener;
@@ -28,7 +28,7 @@ public class Game {
     }
 
     public void loadMap(String file) {
-        if (this.gameState == GameState.STOPPED) {
+        if (this.gameState.getFlowState() == GameState.FlowState.STOPPED) {
             this.grid = new Grid(file, this.cellListener, this.entityListener, this.mapListener);
         }
     }
@@ -43,25 +43,29 @@ public class Game {
         this.stop();
         this.sequencer = new Sequencer(this.grid);
         this.sequencer.start();
-        this.gameState = GameState.RUNNING;
+        this.gameState.setFlowState(GameState.FlowState.RUNNING);
+        this.gameStateListener.gameStateUpdated(this.gameState);
     }
     public void stop() {
-        if (this.gameState != GameState.STOPPED) {
+        if (this.gameState.getFlowState() != GameState.FlowState.STOPPED) {
             this.sequencer.stop();
-            this.gameState = GameState.STOPPED;
+            this.gameState.setFlowState(GameState.FlowState.STOPPED);
+            this.gameStateListener.gameStateUpdated(this.gameState);
         }
     }
 
     public void pause() {
-        if (this.gameState == GameState.RUNNING) {
+        if (this.gameState.getFlowState() == GameState.FlowState.RUNNING) {
             this.sequencer.stop();
-            this.gameState = GameState.PAUSED;
+            this.gameState.setFlowState(GameState.FlowState.PAUSED);
+            this.gameStateListener.gameStateUpdated(this.gameState);
         }
     }
     public void resume() {
-        if (this.gameState == GameState.PAUSED) {
+        if (this.gameState.getFlowState() == GameState.FlowState.PAUSED) {
             this.sequencer.start();
-            this.gameState = GameState.RUNNING;
+            this.gameState.setFlowState(GameState.FlowState.RUNNING);
+            this.gameStateListener.gameStateUpdated(this.gameState);
         }
     }
 }

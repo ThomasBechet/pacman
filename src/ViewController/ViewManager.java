@@ -102,6 +102,8 @@ public class ViewManager implements ChangeListener<Number>, EventHandler<WindowE
 
         this.stage.setScene(this.currentView.getScene());
         this.changed(null, null, null); // Update size window
+
+        this.currentView.initialize();
     }
 
     public void terminate() {

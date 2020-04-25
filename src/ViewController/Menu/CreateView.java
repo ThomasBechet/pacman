@@ -30,8 +30,6 @@ public class CreateView extends View {
 
         this.root = new GridPane();
         this.root.setAlignment(Pos.CENTER);
-        //this.root.setColumnHalignment(HPos.CENTER);
-        //this.root.setOrientation(Orientation.VERTICAL);
         this.root.setStyle("-fx-background-image: url(\"Assets/background.png\"); -fx-background-size: stretch;");
 
         this.scene = new Scene(this.root);
@@ -136,9 +134,9 @@ public class CreateView extends View {
     }
 
     @Override
-    public void terminate() {
-
-    }
+    public void initialize() {}
+    @Override
+    public void terminate() {}
     @Override
     public Scene getScene() {
         return this.scene;

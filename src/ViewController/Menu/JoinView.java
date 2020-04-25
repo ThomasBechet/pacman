@@ -14,6 +14,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.WindowEvent;
 
 import java.net.Inet4Address;
@@ -80,6 +81,8 @@ public class JoinView extends View {
         this.root.requestFocus();
     }
 
+    @Override
+    public void initialize() {}
     @Override
     public void terminate() {}
     @Override

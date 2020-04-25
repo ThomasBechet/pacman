@@ -79,9 +79,9 @@ public class SoloView extends View {
     }
 
     @Override
-    public void terminate() {
-
-    }
+    public void initialize() {}
+    @Override
+    public void terminate() {}
     @Override
     public Scene getScene() {
         return this.scene;

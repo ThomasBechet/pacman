@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.Inet4Address;
 import java.net.Socket;
 
@@ -19,14 +20,10 @@ public class Client {
         this.messageListener = listener;
     }
 
-    public void connect(Inet4Address address, int port) {
-        try {
-            this.socket = new Socket(address, port);
-            this.thread = new Thread(() -> {routine();});
-            this.thread.start();
-        } catch(IOException e) {
-            e.printStackTrace();
-        }
+    public void connect(Inet4Address address, int port) throws IOException {
+        this.socket = new Socket(address, port);
+        this.thread = new Thread(() -> {routine();});
+        this.thread.start();
     }
     public void disconnect() {
         try {
@@ -100,6 +97,8 @@ public class Client {
             case "pacman":
                 this.messageListener.onEntityMessage(new PacmanMessage(parameters));
                 break;
+            case "gamestate":
+                this.messageListener.onGameStateMessage(new GameStateMessage(parameters));
         }
     }
 }

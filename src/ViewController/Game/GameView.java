@@ -9,10 +9,7 @@ import Model.*;
 
 import Network.Client;
 import Network.MessageListener;
-import Network.Messages.CellMessage;
-import Network.Messages.EntityMessage;
-import Network.Messages.MapMessage;
-import Network.Messages.PacmanMessage;
+import Network.Messages.*;
 import Network.Server;
 import ViewController.View;
 import ViewController.ViewManager;
@@ -25,8 +22,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.WindowEvent;
 
+import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
 
@@ -37,6 +36,7 @@ public class GameView extends View implements MessageListener {
     private PlayerInfo[] playerInfos;
     private CellLayer cellLayer;
     private EntityLayer entityLayer;
+    private GameStateLayer gameStateLayer;
     private GridPane gridPane;
 
     private Server server;
@@ -58,41 +58,19 @@ public class GameView extends View implements MessageListener {
 
         this.cellLayer = new CellLayer();
         this.entityLayer = new EntityLayer(cellLayer);
+        this.gameStateLayer = new GameStateLayer();
 
         this.gridPane = new GridPane();
         this.gridPane.setAlignment(Pos.CENTER);
         this.gridPane.add(this.playerInfoPane, 0, 0);
         this.gridPane.add(this.cellLayer, 0, 1);
         this.root.getChildren().add(this.gridPane);
+        this.root.getChildren().add(this.gameStateLayer);
 
         this.scene = new Scene(root);
         this.scene.setFill(Color.BLACK);
 
         this.root.requestFocus();
-
-        if (viewManager.getParameters().solo) {
-            try {
-                this.server = new Server();
-                this.server.open(55555, "src/Maps/map2.txt", 1);
-                this.client = new Client(this);
-                this.client.connect((Inet4Address) Inet4Address.getLocalHost(), 55555);
-            } catch (UnknownHostException e) {}
-        } else {
-            if (viewManager.getParameters().address != null) { // join
-                this.client = new Client(this);
-                this.client.connect(viewManager.getParameters().address, viewManager.getParameters().port);
-            } else { // create
-                this.server = new Server();
-                this.server.open(
-                        viewManager.getParameters().port,
-                        viewManager.getParameters().map,
-                        viewManager.getParameters().playerCount);
-                this.client = new Client(this);
-                try {
-                    this.client.connect((Inet4Address)Inet4Address.getLocalHost(), viewManager.getParameters().port);
-                } catch (UnknownHostException e) {}
-            }
-        }
 
         this.root.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -116,7 +94,35 @@ public class GameView extends View implements MessageListener {
     }
 
     @Override
+    public void initialize() {
+        try {
+            if (viewManager.getParameters().solo) {
+                this.server = new Server();
+                this.server.open(55555, "src/Maps/map2.txt", 1);
+                this.client = new Client(this);
+                this.client.connect((Inet4Address) Inet4Address.getLocalHost(), 55555);
+            } else {
+                if (viewManager.getParameters().address != null) { // join
+                    this.client = new Client(this);
+                    this.client.connect(viewManager.getParameters().address, viewManager.getParameters().port);
+                } else { // create
+                    this.server = new Server();
+                    this.server.open(
+                            viewManager.getParameters().port,
+                            viewManager.getParameters().map,
+                            viewManager.getParameters().playerCount);
+                    this.client = new Client(this);
+                    this.client.connect((Inet4Address)Inet4Address.getLocalHost(), viewManager.getParameters().port);
+                }
+            }
+        } catch (IOException e) {
+            viewManager.setView(ViewManager.State.MAIN);
+        }
+    }
+
+    @Override
     public void terminate() {
+        System.out.println("try disconnect");
         if (this.server != null) this.server.close();
         if (this.client != null) this.client.disconnect();
     }
@@ -156,11 +162,11 @@ public class GameView extends View implements MessageListener {
 
     @Override
     public void onEntityMessage(EntityMessage message) {
-        entityLayer.updateEntity(message);
+        this.entityLayer.updateEntity(message);
         if (message instanceof PacmanMessage) {
             PacmanMessage pacmanMessage = (PacmanMessage)message;
             if (this.playerInfos[pacmanMessage.controllerId] == null) {
-                if (cellLayer.getGridHeight() >= cellLayer.getGridWidth()) {
+                if (this.cellLayer.getGridHeight() >= this.cellLayer.getGridWidth()) {
                     this.playerInfos[pacmanMessage.controllerId] = new PlayerInfo(pacmanMessage.controllerId);
                     Platform.runLater(() -> {
                         this.playerInfoPane.getChildren().add(this.playerInfos[pacmanMessage.controllerId]);
@@ -170,5 +176,12 @@ public class GameView extends View implements MessageListener {
                 this.playerInfos[pacmanMessage.controllerId].updateEntity(pacmanMessage);
             }
         }
+    }
+
+    @Override
+    public void onGameStateMessage(GameStateMessage message) {
+        Platform.runLater(() -> {
+            this.gameStateLayer.updateGameState(message);
+        });
     }
 }
