@@ -93,14 +93,14 @@ public class Server implements MapListener, CellListener, EntityListener, GameSt
     public void close() {
         try {
             if (this.socket != null) {
-                this.socket.close();
-                this.game.stop();
-                this.thread.interrupt();
-
                 for (ClientThread clientThread : this.clientThreads) clientThread.interrupt();
                 for (Socket socket : this.clientSockets) socket.close();
                 this.clientThreads.clear();
                 this.clientSockets.clear();
+
+                this.socket.close();
+                this.game.stop();
+                this.thread.interrupt();
             }
         } catch (IOException e) {}
     }

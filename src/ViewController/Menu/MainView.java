@@ -71,6 +71,20 @@ public class MainView extends View {
         });
         this.root.getChildren().add(multiplayerButton);
 
+        // Editor button
+        Button editorButton = new Button();
+        editorButton.setText("Editor");
+        editorButton.setFont(Font.font("Upheaval TT (BRK)", 60));
+        editorButton.setStyle("-fx-background-color: transparent;");
+        editorButton.setTextFill(Color.WHITE);
+        editorButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                viewManager.setView(ViewManager.State.EDITOR);
+            }
+        });
+        this.root.getChildren().add(editorButton);
+
         // Quit button
         Button quitButton = new Button();
         quitButton.setText("Quit");

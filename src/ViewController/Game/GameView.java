@@ -22,12 +22,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.net.Inet4Address;
-import java.net.UnknownHostException;
 
 public class GameView extends View implements MessageListener {
     private Scene scene;
@@ -98,7 +96,7 @@ public class GameView extends View implements MessageListener {
         try {
             if (viewManager.getParameters().solo) {
                 this.server = new Server();
-                this.server.open(55555, "src/Maps/map2.txt", 1);
+                this.server.open(55555, viewManager.getParameters().map, 1);
                 this.client = new Client(this);
                 this.client.connect((Inet4Address) Inet4Address.getLocalHost(), 55555);
             } else {

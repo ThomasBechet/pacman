@@ -1,5 +1,6 @@
 package ViewController.Menu;
 
+import Maps.MapTools;
 import ViewController.View;
 import ViewController.ViewManager;
 import javafx.beans.value.ChangeListener;
@@ -92,19 +93,18 @@ public class CreateView extends View {
         this.root.add(playerCountTextField, 1, 1);
 
         // Maps
-        int currentRowIndex = 2;
-        String[] maps = {"map1.txt", "map2.txt"};
-        for (String map : maps) {
+        int currentRowIndex = 0;
+        for (String map : MapTools.enumerateMaps()) {
             Button mapButton = new Button();
             mapButton.setText(map.split("\\.")[0]);
-            mapButton.setFont(Font.font("Upheaval TT (BRK)", 60));
+            mapButton.setFont(Font.font("Upheaval TT (BRK)", 20));
             mapButton.setStyle("-fx-background-color: transparent;");
             mapButton.setTextFill(Color.WHITE);
             mapButton.setTextAlignment(TextAlignment.CENTER);
             mapButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    viewManager.getParameters().map = "src/Maps/" + map;
+                    viewManager.getParameters().map = map;
                     viewManager.getParameters().solo = false;
                     viewManager.getParameters().port = Integer.parseInt(portTextField.getText());
                     viewManager.getParameters().playerCount = Integer.parseInt(playerCountTextField.getText());

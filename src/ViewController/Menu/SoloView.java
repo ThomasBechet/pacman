@@ -1,5 +1,6 @@
 package ViewController.Menu;
 
+import Maps.MapTools;
 import ViewController.View;
 import ViewController.ViewManager;
 import javafx.event.ActionEvent;
@@ -30,35 +31,22 @@ public class SoloView extends View {
 
         this.scene = new Scene(this.root);
 
-        // Map1 button
-        Button map1 = new Button();
-        map1.setText("MAP 1");
-        map1.setFont(Font.font("Upheaval TT (BRK)", 60));
-        map1.setStyle("-fx-background-color: transparent;");
-        map1.setTextFill(Color.WHITE);
-        map1.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                viewManager.getParameters().map = "map1.txt";
-                viewManager.setView(ViewManager.State.GAME);
-            }
-        });
-        this.root.getChildren().add(map1);
-
-        // Map2 button
-        Button map2 = new Button();
-        map2.setText("MAP 2");
-        map2.setFont(Font.font("Upheaval TT (BRK)", 60));
-        map2.setStyle("-fx-background-color: transparent;");
-        map2.setTextFill(Color.WHITE);
-        map2.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                viewManager.getParameters().map = "map2.txt";
-                viewManager.setView(ViewManager.State.GAME);
-            }
-        });
-        this.root.getChildren().add(map2);
+        // Maps buttons
+        for (String map : MapTools.enumerateMaps()) {
+            Button mapButton = new Button();
+            mapButton.setText(map);
+            mapButton.setFont(Font.font("Upheaval TT (BRK)", 30));
+            mapButton.setStyle("-fx-background-color: transparent;");
+            mapButton.setTextFill(Color.WHITE);
+            mapButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    viewManager.getParameters().map = map;
+                    viewManager.setView(ViewManager.State.GAME);
+                }
+            });
+            this.root.getChildren().add(mapButton);
+        }
 
         // Back button
         Button backButton = new Button();

@@ -32,7 +32,7 @@ public class MapMessage extends Message {
                     this.walls = new boolean[this.width][this.height];
                     int i = 0;
                     for (char c : parameter.value.toCharArray()) {
-                        this.walls[i % this.width][i / this.width] = (c == '1');
+                        this.walls[i / this.height][i % this.height] = (c == '1');
                         i++;
                     }
                     break;
@@ -45,8 +45,8 @@ public class MapMessage extends Message {
         String s = "";
         s += "width=" + this.width + ";height=" + this.height;
         s += ";walls=";
-        for (int y = 0; y < this.width; y++) {
-            for (int x = 0; x < this.height; x++) {
+        for (int x = 0; x < this.width; x++) {
+            for (int y = 0; y < this.height; y++) {
                 s += this.walls[x][y] ? '1' : '0';
             }
         }

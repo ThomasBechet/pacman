@@ -1,5 +1,6 @@
 package ViewController;
 
+import ViewController.Editor.EditorView;
 import ViewController.Game.GameView;
 import ViewController.Menu.*;
 import javafx.beans.value.ChangeListener;
@@ -23,7 +24,8 @@ public class ViewManager implements ChangeListener<Number>, EventHandler<WindowE
         SOLO,
         JOIN_CREATE_SERVER,
         JOIN,
-        CREATE
+        CREATE,
+        EDITOR
     }
 
     public class Parameters {
@@ -98,6 +100,8 @@ public class ViewManager implements ChangeListener<Number>, EventHandler<WindowE
             this.currentView = new JoinView(this);
         } else if (state == State.CREATE) {
             this.currentView = new CreateView(this);
+        } else if (state == State.EDITOR) {
+            this.currentView = new EditorView(this);
         }
 
         this.stage.setScene(this.currentView.getScene());

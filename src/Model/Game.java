@@ -27,9 +27,9 @@ public class Game {
         this.mapListener = mapListener;
     }
 
-    public void loadMap(String file) {
+    public void loadMap(String map) {
         if (this.gameState.getFlowState() == GameState.FlowState.STOPPED) {
-            this.grid = new Grid(file, this.cellListener, this.entityListener, this.mapListener);
+            this.grid = new Grid(map, this.cellListener, this.entityListener, this.mapListener);
         }
     }
 

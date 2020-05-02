@@ -1,5 +1,7 @@
 package Model;
 
+import Maps.MapTools;
+
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -9,6 +11,18 @@ import java.util.*;
 import java.util.List;
 
 public class Grid {
+    public static final char WALL_CHAR = 'W';
+    public static final char FLOOR_CHAR = 'F';
+    public static final char DOOR_CHAR = 'D';
+    public static final char SIMPLE_PACGUM_CHAR = '.';
+    public static final char SUPER_PACGUM_CHAR = 'O';
+    public static final char FRUIT_CHAR = '-';
+    public static final char BLUE_GHOST_CHAR = 'B';
+    public static final char YELLOW_GHOST_CHAR = 'Y';
+    public static final char RED_GHOST_CHAR = 'R';
+    public static final char PINK_GHOST_CHAR = 'P';
+
+
     private Cell[][] cells;
     private List<Entity> entities;
     private Map<Entity, Point> positions;
@@ -125,33 +139,16 @@ public class Grid {
         }
     }
 
-    private void loadMap(String file) {
-        int width = 0;
-        int height = 0;
-        String characters = new String();
-
-        try {
-            FileReader fileReader = new FileReader(file);
-            BufferedReader reader = new BufferedReader(fileReader);
-
-            String line;
-            int y = 0;
-            while ((line = reader.readLine()) != null) {
-                y++;
-                line = line.trim();
-                if (y == 1) width = line.length();
-                characters += line;
-            }
-            height = y;
-        } catch(Exception exception) {
-            System.out.println(exception.getMessage());
-        }
+    private void loadMap(String map) {
+        char array[][] = MapTools.loadMap(map);
+        int width = array.length;
+        int height = array[0].length;
 
         this.cells = new Cell[width][height];
-        int index = 0;
-        for (char c : characters.toCharArray()) {
-            this.loadCellFromCharacter(c, new Point(index % width, index / width));
-            index++;
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                this.loadCellFromCharacter(array[x][y], new Point(x, y));
+            }
         }
     }
 
@@ -207,11 +204,11 @@ public class Grid {
     }
 
     private void loadCellFromCharacter(char c, Point position) {
-        if (c == 'W') {
+        if (c == WALL_CHAR) {
             this.cells[position.x][position.y] = new Wall();
-        } else if (c == 'F') {
+        } else if (c == FLOOR_CHAR) {
             this.cells[position.x][position.y] = new Floor(null);
-        } else if (c == 'D') {
+        } else if (c == DOOR_CHAR) {
             this.cells[position.x][position.y] = new Door(Ghost.NONE);
         } else if (Character.isDigit(c)) {
             this.cells[position.x][position.y] = new Floor(null);
@@ -228,28 +225,28 @@ public class Grid {
             } else if (controllerIndex == 4) {
                 pacman.setSpeed(100);
             }
-        } else if (c == '.') {
+        } else if (c == SIMPLE_PACGUM_CHAR) {
             this.cells[position.x][position.y] = new Floor(new Pacgum(10, PacgumType.BASE));
-        } else if (c == 'O') {
+        } else if (c == SUPER_PACGUM_CHAR) {
             this.cells[position.x][position.y] = new Floor(new Pacgum(50, PacgumType.SUPER));
-        } else if (c == '-') {
+        } else if (c == FRUIT_CHAR) {
             this.cells[position.x][position.y] = new Floor(new Pacgum(100, PacgumType.FRUIT));
-        } else if (c == 'B') {
+        } else if (c == BLUE_GHOST_CHAR) {
             this.cells[position.x][position.y] = new Floor(null);
             Ghost ghost = new Ghost(this, Ghost.BLUE);
             ghost.setDirection(Direction.UP);
             this.addEntity(ghost, position);
-        } else if (c == 'Y') {
+        } else if (c == YELLOW_GHOST_CHAR) {
             this.cells[position.x][position.y] = new Floor(null);
             Ghost ghost = new Ghost(this, Ghost.ORANGE);
             ghost.setDirection(Direction.UP);
             this.addEntity(ghost, position);
-        } else if (c == 'R') {
+        } else if (c == RED_GHOST_CHAR) {
             this.cells[position.x][position.y] = new Floor(null);
             Ghost ghost = new Ghost(this, Ghost.RED);
             ghost.setDirection(Direction.UP);
             this.addEntity(ghost, position);
-        } else if (c == 'P') {
+        } else if (c == PINK_GHOST_CHAR) {
             this.cells[position.x][position.y] = new Floor(null);
             Ghost ghost = new Ghost(this, Ghost.PINK);
             ghost.setDirection(Direction.UP);
