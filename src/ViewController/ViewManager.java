@@ -25,6 +25,7 @@ public class ViewManager implements ChangeListener<Number>, EventHandler<WindowE
         JOIN_CREATE_SERVER,
         JOIN,
         CREATE,
+        EDITOR_MAP_SELECTION,
         EDITOR
     }
 
@@ -100,6 +101,8 @@ public class ViewManager implements ChangeListener<Number>, EventHandler<WindowE
             this.currentView = new JoinView(this);
         } else if (state == State.CREATE) {
             this.currentView = new CreateView(this);
+        } else if (state == State.EDITOR_MAP_SELECTION) {
+            this.currentView = new EditorMapSelection(this);
         } else if (state == State.EDITOR) {
             this.currentView = new EditorView(this);
         }

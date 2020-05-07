@@ -1,14 +1,28 @@
 package Maps;
 
-import java.awt.*;
+import ViewController.Application;
+
 import java.io.*;
+import java.net.URISyntaxException;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MapTools {
+    public static String mapFolder;
+
+    static {
+        try {
+            mapFolder = new File(Application .class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent();
+            mapFolder += "/maps/";
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static List<String> enumerateMaps() {
         ArrayList<String> maps = new ArrayList<>();
-        File dir = new File("src/Maps");
+        File dir = new File(mapFolder);
         File[] directoryListing = dir.listFiles();
         if (directoryListing != null) {
             for (File child : directoryListing) {
@@ -31,7 +45,7 @@ public class MapTools {
         String characters = new String();
 
         try {
-            FileReader fileReader = new FileReader("src/Maps/" + map + ".txt");
+            FileReader fileReader = new FileReader(mapFolder + map + ".txt");
             BufferedReader reader = new BufferedReader(fileReader);
 
             String line;
@@ -58,7 +72,7 @@ public class MapTools {
     }
     public static void saveMap(String name, char array[][]) {
         try {
-            PrintWriter outFile = new PrintWriter(new FileWriter("src/Maps/" + name + ".txt"));
+            PrintWriter outFile = new PrintWriter(new FileWriter(mapFolder + name + ".txt"));
             for (int y = 0; y < array[0].length; y++) {
                 for (int x = 0; x < array.length; x++) {
                     outFile.write(array[x][y]);
@@ -68,6 +82,17 @@ public class MapTools {
             outFile.close();
         } catch (IOException e) {
             System.out.println(e.getMessage());
+        }
+    }
+    public static void deleteMap(String name) {
+        try {
+            Files.deleteIfExists(Paths.get(mapFolder + name + ".txt"));
+        } catch(NoSuchFileException e) {
+            System.out.println("No such file/directory exists.");
+        } catch(DirectoryNotEmptyException e) {
+            System.out.println("Directory is not empty.");
+        } catch(IOException e) {
+            System.out.println("Invalid permissions.");
         }
     }
 }

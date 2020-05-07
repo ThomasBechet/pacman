@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact name="pacman:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/pacman_jar</output-path>
+    <root id="root">
+      <element id="archive" name="pacman.jar">
+        <element id="module-output" name="pacman" />
+      </element>
+      <element id="library" level="project" name="lib" />
+    </root>
+  </artifact>
+</component>

@@ -1,5 +1,6 @@
 package ViewController.Editor;
 
+import Maps.MapTools;
 import Model.Grid;
 import ViewController.Game.Sprite;
 import javafx.scene.image.Image;
@@ -23,8 +24,19 @@ public class EditorMapLayer extends GridPane {
     private Sprite[][] sprites;
     private Point[] pacmanSpawns;
 
-    public EditorMapLayer(int width, int height) {
-        this.array = new char[width][height];
+    public EditorMapLayer() {
+        char array[][] = new char[15][15];
+        for (char[] row : array)
+            Arrays.fill(row, Grid.FLOOR_CHAR);
+
+        initiateMap(array);
+    }
+    public EditorMapLayer(String map) {
+        initiateMap(MapTools.loadMap(map));
+    }
+
+    public void initiateMap(char array[][]) {
+        this.array = array;
         this.pacmanSpawns = new Point[4];
 
         this.setBorder(new Border(new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, new CornerRadii(0.0), BorderWidths.DEFAULT)));
@@ -32,15 +44,17 @@ public class EditorMapLayer extends GridPane {
         this.setVgap(1);
         this.setStyle("-fx-background-color: grey;");
 
-        for (char[] row : this.array)
-            Arrays.fill(row, Grid.FLOOR_CHAR);
-
-        this.sprites = new Sprite[width][height];
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
+        this.sprites = new Sprite[this.array.length][this.array[0].length];
+        for (int x = 0; x < this.array.length; x++) {
+            for (int y = 0; y < this.array[0].length; y++) {
                 this.sprites[x][y] = new Sprite();
                 this.add(this.sprites[x][y], x, y);
                 this.sprites[x][y].setSpriteSheet(imageFloor);
+            }
+        }
+        for (int x = 0; x < this.array.length; x++) {
+            for (int y = 0; y < this.array[0].length; y++) {
+                this.setCell(x, y, this.array[x][y]);
             }
         }
     }
