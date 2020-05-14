@@ -120,8 +120,6 @@ public class MovableEntityAnimation extends AnimationImage {
                 int subdivisionX = stepX > 0 ? (durationX / 10) : 0;
                 int subdivisionY = stepY > 0 ? (durationY / 10) : 0;
 
-                System.out.println(subdivisionX + " " + subdivisionY);
-
                 this.timeline.getKeyFrames().clear();
 
                 for (int i = 0; i < subdivisionX; i++) {
@@ -135,7 +133,7 @@ public class MovableEntityAnimation extends AnimationImage {
                     double t = (double)i / (double)(subdivisionY - 1);
                     int posX = stop.x;
                     int posY = start.y + (int)(t * (double)(stop.y - start.y));
-                    int time = (int)(t * (double)durationY);
+                    int time = durationX + (int)(t * (double)durationY);
                     this.timeline.getKeyFrames().add(new KeyFrame(new Duration(time), new Frame(this, new Point(posX, posY))));
                 }
 
