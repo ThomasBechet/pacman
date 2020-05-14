@@ -9,6 +9,7 @@ public class Pacman extends MovableEntity {
     private boolean hero;
     private int timeHero;
     private int controller;
+    private int combo;
 
     public Pacman(Grid grid, int lifeCount, int controller, Point position) {
         super(grid);
@@ -18,6 +19,7 @@ public class Pacman extends MovableEntity {
         this.score = 0;
         this.hero = false;
         this.controller = controller;
+        this.combo = 200;
     }
 
     public int getControllerId() {
@@ -44,6 +46,11 @@ public class Pacman extends MovableEntity {
         }
     }
 
+    public void killGhost () {
+        this.addScore(combo);
+        this.combo *= 2;
+    }
+
     @Override
     public void respawn() {
         if (lifes > 0)
@@ -68,6 +75,9 @@ public class Pacman extends MovableEntity {
     public void setHero(boolean hero) {
         this.hero = hero;
         this.timeHero = 0;
+        if (!hero) {
+            combo = 200;
+        }
     }
 
     @Override

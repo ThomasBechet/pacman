@@ -67,6 +67,7 @@ public class Sequencer implements Runnable {
                         MovableEntity movableEntity = (MovableEntity) entity;
                         Duration duration = this.movableEntities.get(movableEntity);
                         if (duration == null) {
+                            movableEntity.setEntityState(MovableEntity.EntityState.ALIVE);
                             this.movableEntities.put(movableEntity, new Duration(0));
                             duration = this.movableEntities.get(movableEntity);
                         }
