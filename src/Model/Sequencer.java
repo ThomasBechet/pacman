@@ -74,7 +74,11 @@ public class Sequencer implements Runnable {
                         // Update movable entities if needed
                         this.movableEntities.replace(movableEntity, new Duration(duration.toMillis() + timeElapsed));
                         if (duration.greaterThanOrEqualTo(new Duration(movableEntity.getSpeed()))) {
+                            MovableEntity.EntityState oldEntityState = ((MovableEntity) entity).getEntityState();
                             entity.update((long) (duration.toMillis()));
+                            if (((MovableEntity) entity).getEntityState().equals(MovableEntity.EntityState.ALIVE) && oldEntityState.equals(MovableEntity.EntityState.DEAD)) {
+                               this.grid.respawn(entity);
+                            }
                             this.movableEntities.replace(movableEntity, new Duration(0));
                         }
 

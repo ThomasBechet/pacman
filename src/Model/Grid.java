@@ -205,6 +205,11 @@ public class Grid {
         return !(cell instanceof Wall) && ((cell instanceof Door && entity instanceof Ghost && ((Door) cell).isOpenFor(((Ghost) entity).getId())) || !(cell instanceof Door));
     }
 
+    public void respawn (Entity entity) {
+        System.out.println(positions.get(entity).getX());
+        System.out.println(spawns.get(entity).getX());
+    }
+
     private void loadCellFromCharacter(char c, Point position) {
         if (c == WALL_CHAR) {
             this.cells[position.x][position.y] = new Wall();
