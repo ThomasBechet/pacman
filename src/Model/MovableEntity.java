@@ -73,7 +73,7 @@ public class MovableEntity extends Entity {
 
     public void die() {
         this.entityState = EntityState.PENDING;
-        this.timeBeforeRespawn = 3000;
+        this.timeBeforeRespawn = 6000;
     }
 
     public void respawn() {
