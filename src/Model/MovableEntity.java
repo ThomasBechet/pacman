@@ -64,7 +64,7 @@ public class MovableEntity extends Entity {
     }
 
     public Point getSpawn() {
-        return this.grid.getEntitySpawn(this);
+        return (Point)(this.grid.getEntitySpawn(this).clone());
     }
 
     public void tick() {  }

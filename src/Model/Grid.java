@@ -206,8 +206,7 @@ public class Grid {
     }
 
     public void respawn (Entity entity) {
-        System.out.println(positions.get(entity).getX());
-        System.out.println(spawns.get(entity).getX());
+        positions.replace(entity, entity instanceof MovableEntity ? (((MovableEntity) entity).getSpawn()) : null);
     }
 
     private void loadCellFromCharacter(char c, Point position) {
