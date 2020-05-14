@@ -11,7 +11,7 @@ public class Pacman extends MovableEntity {
     private int controller;
 
     public Pacman(Grid grid, int lifeCount, int controller, Point position) {
-        super(grid, position);
+        super(grid);
 
         this.wantedDirection = this.getDirection();
         this.lifes = lifeCount;

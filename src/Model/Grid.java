@@ -161,7 +161,7 @@ public class Grid {
     private void addEntity(Entity entity, Point point) {
         this.entities.add(entity);
         this.positions.put(entity, point);
-        this.spawns.put(entity, point);
+        this.spawns.put(entity, (Point)point.clone());
         this.entityListener.entityUpdated(entity, point);
     }
 //    private void removeEntity(Entity entity) {

@@ -21,7 +21,7 @@ public class GhostAnimation extends MovableEntityAnimation {
             image = imageOrangeGhost;
         } else if (id == Ghost.PINK) {
             image = imagePinkGhost;
-        } else if (id == Ghost.RED){
+        } else if (id == Ghost.RED) {
             image = imageRedGhost;
         }
 
