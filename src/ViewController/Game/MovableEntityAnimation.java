@@ -52,6 +52,8 @@ public class MovableEntityAnimation extends AnimationImage {
             this.duration = entityMessage.speed;
             Direction direction = entityMessage.direction;
 
+            System.out.println(entityMessage.spawn);
+
             if (entityMessage.entityState == MovableEntity.EntityState.ALIVE) {
                 if (entityMessage.isMoving) {
                     this.start = new Point(entityMessage.position.x * Sprite.TILE_SIZE, entityMessage.position.y * Sprite.TILE_SIZE);
@@ -68,7 +70,8 @@ public class MovableEntityAnimation extends AnimationImage {
                     this.playMovableAnimation();
                 }
             } else if (entityMessage.entityState == MovableEntity.EntityState.PENDING) {
-
+                this.start = entityMessage.position;
+                this.stop = entityMessage.spawn;
                 this.playRespawnAnimation();
             } else if (entityMessage.entityState == MovableEntity.EntityState.DEAD) {
 
@@ -101,7 +104,21 @@ public class MovableEntityAnimation extends AnimationImage {
     private void playRespawnAnimation() {
         Platform.runLater(() -> {
             synchronized (this.timeline) {
+                if (this.timeline != null) {
+                    this.timeline.stop();
+                }
 
+                int subdivision = this.duration / 10;
+
+                this.timeline.getKeyFrames().clear();
+                for (int i = 0; i < subdivision; i++) {
+                    double t = (double)i / (double)(subdivision - 1);
+                    int posX = start.x + (int)(t * (double)(stop.x - start.x));
+                    int posY = start.y + (int)(t * (double)(stop.y - start.y));
+                    int time = (int)(t * (double)duration);
+                    this.timeline.getKeyFrames().add(new KeyFrame(new Duration(time), new Frame(this, new Point(posX, posY))));
+                }
+                this.timeline.play();
             }
         });
     }

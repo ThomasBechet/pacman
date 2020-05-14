@@ -11,6 +11,7 @@ public class MovableEntityMessage extends EntityMessage {
     public boolean isMoving = false;
     public int speed = 0;
     public MovableEntity.EntityState entityState = MovableEntity.EntityState.ALIVE;
+    public Point spawn = new Point();
 
     public MovableEntityMessage(MovableEntity entity, Point position, Integer id) {
         super(entity, position, id);
@@ -18,6 +19,7 @@ public class MovableEntityMessage extends EntityMessage {
         this.isMoving = entity.isMoving();
         this.speed = entity.getSpeed();
         this.entityState = entity.getEntityState();
+        this.spawn = entity.getSpawn();
     }
 
     public MovableEntityMessage(Parameter[] parameters) {
@@ -60,6 +62,12 @@ public class MovableEntityMessage extends EntityMessage {
                             break;
                     }
                     break;
+                case "spawn_x":
+                    this.spawn.x = Integer.parseInt(parameter.value);
+                    break;
+                case "spawn_y":
+                    this.spawn.y = Integer.parseInt(parameter.value);
+                    break;
             }
         }
     }
@@ -101,6 +109,9 @@ public class MovableEntityMessage extends EntityMessage {
                 s+= ";state=pending";
                 break;
         }
+
+        s += ";spawn_x=" + this.spawn.x;
+        s += ";spawn_y=" + this.spawn.y;
 
         return super.toString() + s;
     }
