@@ -89,7 +89,7 @@ public class Grid {
                             if (getEntityPosition(entity).equals(getEntityPosition(e)) && (e instanceof MovableEntity && ((MovableEntity) e).getEntityState().equals(MovableEntity.EntityState.ALIVE))) {
                                 if (((Pacman) entity).isHero()) {
                                     ((Pacman) entity).killGhost();
-                                    ((Ghost) e).kill();
+                                    ((Ghost) e).die();
                                 } else {
                                     ((Pacman) entity).removeLife();
                                 }
@@ -103,7 +103,7 @@ public class Grid {
                             if (getEntityPosition(entity).equals(getEntityPosition(e)) && (e instanceof MovableEntity && ((MovableEntity) e).getEntityState().equals(MovableEntity.EntityState.ALIVE))) {
                                 if (((Pacman) e).isHero()) {
                                     ((Pacman) e).killGhost();
-                                    ((Ghost) entity).kill();
+                                    ((Ghost) entity).die();
                                 } else {
                                     ((Pacman) e).removeLife();
                                 }

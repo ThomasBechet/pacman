@@ -39,7 +39,7 @@ public class Pacman extends MovableEntity {
     }
 
     public void removeLife() {
-        this.kill();
+        this.die();
         if (this.lifes > 0) {
             this.lifes--;
             this.grid.notifyEntity(this);
@@ -55,6 +55,8 @@ public class Pacman extends MovableEntity {
     public void respawn() {
         if (lifes > 0)
             super.respawn();
+        else
+            this.setEntityState(EntityState.DEAD);
     }
 
     public int getScore() {

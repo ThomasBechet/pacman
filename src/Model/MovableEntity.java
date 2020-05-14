@@ -21,7 +21,7 @@ public class MovableEntity extends Entity {
         this.isMoving = false;
         this.direction = Direction.LEFT;
         this.speed = 300;
-        this.entityState = EntityState.PENDING;
+        this.entityState = EntityState.ALIVE;
     }
 
     public Direction getDirection() {
