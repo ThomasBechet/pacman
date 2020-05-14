@@ -2,9 +2,12 @@ package ViewController.Editor;
 
 import Model.Grid;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
@@ -15,6 +18,7 @@ public class EditorController implements EventHandler<MouseEvent> {
     public EditorController(EditorMapLayer editorMap, ToggleGroup group) {
         this.editorMapLayer = editorMap;
         this.group = group;
+
         for (Node node : this.editorMapLayer.getChildren()) {
             node.addEventFilter(MouseEvent.MOUSE_CLICKED, this);
         }

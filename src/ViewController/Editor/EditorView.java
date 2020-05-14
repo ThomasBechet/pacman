@@ -33,11 +33,20 @@ public class EditorView extends View {
         this.scene = new Scene(this.root);
 
         // Title
-        TextField titleTextField = new TextField("map1");
-        titleTextField.setMinWidth(300.0);
+        TextField titleTextField = new TextField();
+        if (viewManager.getParameters().map != null) {
+            titleTextField.setText(viewManager.getParameters().map);
+        } else {
+            titleTextField.setText("new map");
+        }
+        titleTextField.setMinWidth(50.0);
 
         // Map layer
-        this.editorMapLayer = new EditorMapLayer(15, 15);
+        if (viewManager.getParameters().map != null) {
+            this.editorMapLayer = new EditorMapLayer(viewManager.getParameters().map);
+        } else {
+            this.editorMapLayer = new EditorMapLayer();
+        }
 
         // Radio boxes
         ToggleGroup tg = new ToggleGroup();
@@ -130,6 +139,20 @@ public class EditorView extends View {
             }
         });
 
+        // Delete button
+        Button deleteButton = new Button();
+        deleteButton.setText("Delete");
+        deleteButton.setFont(Font.font("Upheaval TT (BRK)", 30));
+        deleteButton.setStyle("-fx-background-color: transparent;");
+        deleteButton.setTextFill(Color.WHITE);
+        deleteButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                MapTools.deleteMap(titleTextField.getText());
+                viewManager.setView(ViewManager.State.EDITOR_MAP_SELECTION);
+            }
+        });
+
         // Save button
         Button saveButton = new Button();
         saveButton.setText("Save");
@@ -139,8 +162,8 @@ public class EditorView extends View {
         saveButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("Saved");
                 MapTools.saveMap(titleTextField.getText(), editorMapLayer.getArray());
+                viewManager.setView(ViewManager.State.EDITOR_MAP_SELECTION);
             }
         });
 
@@ -165,22 +188,25 @@ public class EditorView extends View {
         flowPane.getChildren().add(ghostOrange);
         flowPane.getChildren().add(ghostPink);
 
+        flowPane.getChildren().add(saveButton);
+        flowPane.getChildren().add(deleteButton);
+
         selectFloor.setSelected(true);
 
         // Edition panel
         this.editionPane = new GridPane();
         this.editionPane.setHgap(10.0);
         this.editionPane.setVgap(10.0);
-        this.editionPane.add(titleTextField, 0, 0, 1, 1);
-        Pane pane = new Pane();
+        FlowPane pane = new FlowPane();
+        pane.setAlignment(Pos.CENTER);
+        pane.getChildren().add(titleTextField);
         pane.getChildren().add(this.editorMapLayer);
         pane.setMinHeight(300.0);
         pane.setMaxHeight(this.editorMapLayer.getGridHeight());
         flowPane.setMaxHeight(pane.getMinHeight());
-        this.editionPane.add(pane, 0, 1);
-        this.editionPane.add(flowPane, 1, 1);
+        this.editionPane.add(pane, 0, 1, 2, 1);
+        this.editionPane.add(flowPane, 2, 1);
         this.editionPane.add(backButton, 0, 2);
-        this.editionPane.add(saveButton, 1, 2);
         this.root.getChildren().add(this.editionPane);
 
         // Controller

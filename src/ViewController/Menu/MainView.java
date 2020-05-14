@@ -80,7 +80,7 @@ public class MainView extends View {
         editorButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                viewManager.setView(ViewManager.State.EDITOR);
+                viewManager.setView(ViewManager.State.EDITOR_MAP_SELECTION);
             }
         });
         this.root.getChildren().add(editorButton);

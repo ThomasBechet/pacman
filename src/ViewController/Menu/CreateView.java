@@ -93,11 +93,11 @@ public class CreateView extends View {
         this.root.add(playerCountTextField, 1, 1);
 
         // Maps
-        int currentRowIndex = 0;
+        int currentRowIndex = 2;
         for (String map : MapTools.enumerateMaps()) {
             Button mapButton = new Button();
             mapButton.setText(map.split("\\.")[0]);
-            mapButton.setFont(Font.font("Upheaval TT (BRK)", 20));
+            mapButton.setFont(Font.font("Upheaval TT (BRK)", 30));
             mapButton.setStyle("-fx-background-color: transparent;");
             mapButton.setTextFill(Color.WHITE);
             mapButton.setTextAlignment(TextAlignment.CENTER);
