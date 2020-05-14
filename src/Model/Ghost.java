@@ -19,7 +19,7 @@ public class Ghost extends MovableEntity {
     private int panicTime;
 
     public Ghost(Grid grid, int id, Point position) {
-        super(grid, position);
+        super(grid);
         this.id = id;
         panic = false;
     }
@@ -28,7 +28,6 @@ public class Ghost extends MovableEntity {
         this.panic = panic;
         if (panic) {
             panicTime = 10000;
-
         }
     }
 

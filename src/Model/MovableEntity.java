@@ -15,15 +15,13 @@ public class MovableEntity extends Entity {
     private EntityState entityState;
     private long timeBeforeDead;
     private long timeBeforeRespawn;
-    private Point spawnPoint;
 
-    public MovableEntity(Grid grid, Point spawnPoint) {
+    public MovableEntity(Grid grid) {
         super(grid);
         this.isMoving = false;
         this.direction = Direction.LEFT;
         this.speed = 300;
         this.entityState = EntityState.PENDING;
-        this.spawnPoint = spawnPoint;
     }
 
     public Direction getDirection() {

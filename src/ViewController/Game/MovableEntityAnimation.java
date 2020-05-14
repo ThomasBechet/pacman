@@ -1,6 +1,7 @@
 package ViewController.Game;
 
 import Model.Direction;
+import Model.MovableEntity;
 import Network.Messages.MovableEntityMessage;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -50,26 +51,32 @@ public class MovableEntityAnimation extends AnimationImage {
         synchronized (this.timeline) {
             this.duration = entityMessage.speed;
             Direction direction = entityMessage.direction;
-            if (entityMessage.isMoving) {
-                this.start = new Point(entityMessage.position.x * 20, entityMessage.position.y * 20);
-                if (direction == Direction.RIGHT) {
-                    this.stop = new Point(this.start.x + 20, this.start.y);
-                } else if (direction == Direction.DOWN) {
-                    this.stop = new Point(this.start.x, this.start.y + 20);
-                } else if (direction == Direction.LEFT) {
-                    this.stop = new Point(this.start.x - 20, this.start.y);
-                } else if (direction == Direction.UP) {
-                    this.stop = new Point(this.start.x, this.start.y - 20);
-                }
 
-                this.playAnimation();
+            if (entityMessage.entityState == MovableEntity.EntityState.ALIVE) {
+                if (entityMessage.isMoving) {
+                    this.start = new Point(entityMessage.position.x * Sprite.TILE_SIZE, entityMessage.position.y * Sprite.TILE_SIZE);
+                    if (direction == Direction.RIGHT) {
+                        this.stop = new Point(this.start.x + Sprite.TILE_SIZE, this.start.y);
+                    } else if (direction == Direction.DOWN) {
+                        this.stop = new Point(this.start.x, this.start.y + Sprite.TILE_SIZE);
+                    } else if (direction == Direction.LEFT) {
+                        this.stop = new Point(this.start.x - Sprite.TILE_SIZE, this.start.y);
+                    } else if (direction == Direction.UP) {
+                        this.stop = new Point(this.start.x, this.start.y - Sprite.TILE_SIZE);
+                    }
+
+                    this.playMovableAnimation();
+                }
+            } else if (entityMessage.entityState == MovableEntity.EntityState.PENDING) {
+
+                this.playRespawnAnimation();
+            } else if (entityMessage.entityState == MovableEntity.EntityState.DEAD) {
+
             }
         }
-
     }
 
-    private void playAnimation() {
-
+    private void playMovableAnimation() {
         Platform.runLater(() -> {
             synchronized (this.timeline) {
                 if (this.timeline != null) {
@@ -88,8 +95,14 @@ public class MovableEntityAnimation extends AnimationImage {
                 }
                 this.timeline.play();
             }
-
         });
+    }
 
+    private void playRespawnAnimation() {
+        Platform.runLater(() -> {
+            synchronized (this.timeline) {
+
+            }
+        });
     }
 }
