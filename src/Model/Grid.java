@@ -60,49 +60,51 @@ public class Grid {
     }
 
     public void move(Entity entity, Direction direction) {
-        Point point = positions.get(entity);
-        if (this.canMove(entity, direction)) {
-            this.applyDirection(point, direction);
-            Cell curCell = this.cellAt(point);
-            if (curCell instanceof Floor && entity instanceof Pacman) {
-                if (((Floor)curCell).hasPacgum()) {
-                    int oldScore = ((Pacman) entity).getScore();
-                    ((Pacman)entity).addScore(((Floor)curCell).getPacgum().getValue());
-                    if (((Floor) curCell).getPacgum().getType().equals(PacgumType.SUPER)) {
-                        ((Pacman) entity).setHero(true);
-                        for (Entity g : this.getEntities()) {
-                            if (g instanceof Ghost) {
-                                ((Ghost) g).setPanic(true);
+        if (entity instanceof MovableEntity && ((MovableEntity) entity).getEntityState().equals(MovableEntity.EntityState.ALIVE)) {
+            Point point = positions.get(entity);
+            if (this.canMove(entity, direction)) {
+                this.applyDirection(point, direction);
+                Cell curCell = this.cellAt(point);
+                if (curCell instanceof Floor && entity instanceof Pacman) {
+                    if (((Floor) curCell).hasPacgum()) {
+                        int oldScore = ((Pacman) entity).getScore();
+                        ((Pacman) entity).addScore(((Floor) curCell).getPacgum().getValue());
+                        if (((Floor) curCell).getPacgum().getType().equals(PacgumType.SUPER)) {
+                            ((Pacman) entity).setHero(true);
+                            for (Entity g : this.getEntities()) {
+                                if (g instanceof Ghost) {
+                                    ((Ghost) g).setPanic(true);
+                                }
+                            }
+                        }
+                        int mod = ((Pacman) entity).getScore() / 10000;
+                        if (oldScore - mod * 10000 < 0) {
+                            ((Pacman) entity).addLife();
+                        }
+                        ((Floor) curCell).removePacgum();
+                        this.cellListener.cellUpdated(curCell, point);
+                    }
+                    for (Entity e : this.getEntities()) {
+                        if (e instanceof Ghost) {
+                            if (getEntityPosition(entity).equals(getEntityPosition(e)) && (e instanceof MovableEntity && ((MovableEntity) e).getEntityState().equals(MovableEntity.EntityState.ALIVE))) {
+                                if (((Pacman) entity).isHero()) {
+                                    ((Ghost) e).kill();
+                                } else {
+                                    ((Pacman) entity).removeLife();
+                                }
                             }
                         }
                     }
-                    int mod = ((Pacman) entity).getScore() / 10000;
-                    if (oldScore - mod * 10000 < 0) {
-                        ((Pacman) entity).addLife();
-                    }
-                    ((Floor)curCell).removePacgum();
-                    this.cellListener.cellUpdated(curCell, point);
                 }
-                for (Entity e : this.getEntities()) {
-                    if (e instanceof Ghost) {
-                        if (getEntityPosition(entity).equals(getEntityPosition(e))) {
-                            if (((Pacman) entity).isHero()) {
-                                ((Ghost) e).kill();
-                            } else {
-                                ((Pacman) entity).removeLife();
-                            }
-                        }
-                    }
-                }
-            }
-            if (entity instanceof Ghost) {
-                for (Entity e : this.getEntities()) {
-                    if (e instanceof Pacman) {
-                        if (getEntityPosition(entity).equals(getEntityPosition(e))) {
-                            if (((Pacman) e).isHero()) {
-                                ((Ghost) entity).kill();
-                            } else {
-                                ((Pacman) e).removeLife();
+                if (entity instanceof Ghost) {
+                    for (Entity e : this.getEntities()) {
+                        if (e instanceof Pacman) {
+                            if (getEntityPosition(entity).equals(getEntityPosition(e)) && (e instanceof MovableEntity && ((MovableEntity) e).getEntityState().equals(MovableEntity.EntityState.ALIVE))) {
+                                if (((Pacman) e).isHero()) {
+                                    ((Ghost) entity).kill();
+                                } else {
+                                    ((Pacman) e).removeLife();
+                                }
                             }
                         }
                     }
@@ -213,7 +215,7 @@ public class Grid {
         } else if (Character.isDigit(c)) {
             this.cells[position.x][position.y] = new Floor(null);
             int controllerIndex = Character.getNumericValue(c) - 1;
-            Pacman pacman = new Pacman(this, 3, controllerIndex);
+            Pacman pacman = new Pacman(this, 3, controllerIndex, position);
             this.addEntity(pacman, position);
             this.controllers.put(controllerIndex, pacman);
             if (controllerIndex == 1) {
@@ -233,22 +235,22 @@ public class Grid {
             this.cells[position.x][position.y] = new Floor(new Pacgum(100, PacgumType.FRUIT));
         } else if (c == BLUE_GHOST_CHAR) {
             this.cells[position.x][position.y] = new Floor(null);
-            Ghost ghost = new Ghost(this, Ghost.BLUE);
+            Ghost ghost = new Ghost(this, Ghost.BLUE, position);
             ghost.setDirection(Direction.UP);
             this.addEntity(ghost, position);
         } else if (c == YELLOW_GHOST_CHAR) {
             this.cells[position.x][position.y] = new Floor(null);
-            Ghost ghost = new Ghost(this, Ghost.ORANGE);
+            Ghost ghost = new Ghost(this, Ghost.ORANGE, position);
             ghost.setDirection(Direction.UP);
             this.addEntity(ghost, position);
         } else if (c == RED_GHOST_CHAR) {
             this.cells[position.x][position.y] = new Floor(null);
-            Ghost ghost = new Ghost(this, Ghost.RED);
+            Ghost ghost = new Ghost(this, Ghost.RED, position);
             ghost.setDirection(Direction.UP);
             this.addEntity(ghost, position);
         } else if (c == PINK_GHOST_CHAR) {
             this.cells[position.x][position.y] = new Floor(null);
-            Ghost ghost = new Ghost(this, Ghost.PINK);
+            Ghost ghost = new Ghost(this, Ghost.PINK, position);
             ghost.setDirection(Direction.UP);
             this.addEntity(ghost, position);
         }

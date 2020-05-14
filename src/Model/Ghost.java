@@ -18,8 +18,8 @@ public class Ghost extends MovableEntity {
     private boolean panic;
     private int panicTime;
 
-    public Ghost(Grid grid, int id) {
-        super(grid);
+    public Ghost(Grid grid, int id, Point position) {
+        super(grid, position);
         this.id = id;
         panic = false;
     }

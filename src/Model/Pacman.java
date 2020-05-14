@@ -1,5 +1,7 @@
 package Model;
 
+import java.awt.*;
+
 public class Pacman extends MovableEntity {
     private Direction wantedDirection;
     private int lifes;
@@ -8,8 +10,8 @@ public class Pacman extends MovableEntity {
     private int timeHero;
     private int controller;
 
-    public Pacman(Grid grid, int lifeCount, int controller) {
-        super(grid);
+    public Pacman(Grid grid, int lifeCount, int controller, Point position) {
+        super(grid, position);
 
         this.wantedDirection = this.getDirection();
         this.lifes = lifeCount;
@@ -40,6 +42,12 @@ public class Pacman extends MovableEntity {
             this.lifes--;
             this.grid.notifyEntity(this);
         }
+    }
+
+    @Override
+    public void respawn() {
+        if (lifes > 0)
+            super.respawn();
     }
 
     public int getScore() {
