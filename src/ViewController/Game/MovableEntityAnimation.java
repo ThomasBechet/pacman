@@ -19,6 +19,7 @@ public class MovableEntityAnimation extends AnimationImage {
     private Point start;
     private Point stop;
     private int duration;
+    private boolean playingRespawnAnimation = false;
 
     private class Frame implements EventHandler<ActionEvent> {
         private ImageView image;
@@ -49,10 +50,12 @@ public class MovableEntityAnimation extends AnimationImage {
     public void update(MovableEntityMessage entityMessage) {
 
         synchronized (this.timeline) {
-            this.duration = entityMessage.speed;
-            Direction direction = entityMessage.direction;
-
             if (entityMessage.entityState == MovableEntity.EntityState.ALIVE) {
+                this.duration = entityMessage.speed;
+                Direction direction = entityMessage.direction;
+
+                this.playingRespawnAnimation = false;
+
                 if (entityMessage.isMoving) {
                     this.start = new Point(entityMessage.position.x * Sprite.TILE_SIZE, entityMessage.position.y * Sprite.TILE_SIZE);
                     if (direction == Direction.RIGHT) {
@@ -68,9 +71,13 @@ public class MovableEntityAnimation extends AnimationImage {
                     this.playMovableAnimation();
                 }
             } else if (entityMessage.entityState == MovableEntity.EntityState.PENDING) {
-                this.start = entityMessage.position;
-                this.stop = entityMessage.spawn;
-                this.playRespawnAnimation();
+                if (!this.playingRespawnAnimation) {
+                    this.duration = 6000;
+                    this.start = new Point(entityMessage.position.x * Sprite.TILE_SIZE, entityMessage.position.y * Sprite.TILE_SIZE);
+                    this.stop = new Point(entityMessage.spawn.x * Sprite.TILE_SIZE, entityMessage.spawn.y * Sprite.TILE_SIZE);
+                    this.playingRespawnAnimation = true;
+                    this.playRespawnAnimation();
+                }
             } else if (entityMessage.entityState == MovableEntity.EntityState.DEAD) {
 
             }
@@ -106,16 +113,32 @@ public class MovableEntityAnimation extends AnimationImage {
                     this.timeline.stop();
                 }
 
-                int subdivision = this.duration / 10;
+                int stepX = Math.abs((this.stop.x / Sprite.TILE_SIZE) - (this.start.x / Sprite.TILE_SIZE));
+                int stepY = Math.abs((this.stop.y / Sprite.TILE_SIZE) - (this.start.y / Sprite.TILE_SIZE));
+                int durationX = stepX > 0 ? (int)(((double)stepX / (double)(stepX + stepY)) * (double)this.duration) : 0;
+                int durationY = stepY > 0 ? (int)(((double)stepY / (double)(stepX + stepY)) * (double)this.duration) : 0;
+                int subdivisionX = stepX > 0 ? (durationX / 10) : 0;
+                int subdivisionY = stepY > 0 ? (durationY / 10) : 0;
+
+                System.out.println(subdivisionX + " " + subdivisionY);
 
                 this.timeline.getKeyFrames().clear();
-                for (int i = 0; i < subdivision; i++) {
-                    double t = (double)i / (double)(subdivision - 1);
+
+                for (int i = 0; i < subdivisionX; i++) {
+                    double t = (double)i / (double)(subdivisionX - 1);
                     int posX = start.x + (int)(t * (double)(stop.x - start.x));
-                    int posY = start.y + (int)(t * (double)(stop.y - start.y));
-                    int time = (int)(t * (double)duration);
+                    int posY = start.y;
+                    int time = (int)(t * (double)durationX);
                     this.timeline.getKeyFrames().add(new KeyFrame(new Duration(time), new Frame(this, new Point(posX, posY))));
                 }
+                for (int i = 0; i < subdivisionY; i++) {
+                    double t = (double)i / (double)(subdivisionY - 1);
+                    int posX = stop.x;
+                    int posY = start.y + (int)(t * (double)(stop.y - start.y));
+                    int time = (int)(t * (double)durationY);
+                    this.timeline.getKeyFrames().add(new KeyFrame(new Duration(time), new Frame(this, new Point(posX, posY))));
+                }
+
                 this.timeline.play();
             }
         });
