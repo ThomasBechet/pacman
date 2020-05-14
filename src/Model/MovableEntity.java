@@ -13,7 +13,6 @@ public class MovableEntity extends Entity {
     private Direction direction;
     private int speed;
     private EntityState entityState;
-    private long timeBeforeDead;
     private long timeBeforeRespawn;
 
     public MovableEntity(Grid grid) {
@@ -44,13 +43,8 @@ public class MovableEntity extends Entity {
 
     @Override
     public void update(long timeElapsed) {
-        timeBeforeDead -= timeElapsed;
-        if (timeBeforeDead < 0 && this.entityState.equals(EntityState.PENDING)) {
-            timeBeforeDead = 0;
-            this.die();
-        }
         timeBeforeRespawn -= timeElapsed;
-        if (timeBeforeRespawn < 0 && this.entityState.equals(EntityState.DEAD)) {
+        if (timeBeforeRespawn < 0 && this.entityState.equals(EntityState.PENDING)) {
             timeBeforeRespawn = 0;
             this.respawn();
         }
@@ -78,13 +72,8 @@ public class MovableEntity extends Entity {
     }
 
     public void die() {
-        this.entityState = EntityState.DEAD;
-        this.timeBeforeRespawn = 3000;
-    }
-
-    public void kill() {
         this.entityState = EntityState.PENDING;
-        this.timeBeforeDead = 3000;
+        this.timeBeforeRespawn = 3000;
     }
 
     public void respawn() {
