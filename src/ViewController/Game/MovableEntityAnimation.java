@@ -52,8 +52,6 @@ public class MovableEntityAnimation extends AnimationImage {
             this.duration = entityMessage.speed;
             Direction direction = entityMessage.direction;
 
-            System.out.println(entityMessage.spawn);
-
             if (entityMessage.entityState == MovableEntity.EntityState.ALIVE) {
                 if (entityMessage.isMoving) {
                     this.start = new Point(entityMessage.position.x * Sprite.TILE_SIZE, entityMessage.position.y * Sprite.TILE_SIZE);
