@@ -35,7 +35,7 @@ public class Pacman extends MovableEntity {
     }
 
     public void removeLife() {
-        this.die();
+        this.kill();
         if (this.lifes > 0) {
             this.lifes--;
             this.grid.notifyEntity(this);

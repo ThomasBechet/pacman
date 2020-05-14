@@ -183,6 +183,7 @@ public class Server implements MapListener, CellListener, EntityListener, GameSt
             } else if (cell instanceof Floor) {
                 this.messages.add(new FloorMessage((Floor)cell, position));
             }
+            this.messages.notify();
         }
     }
     @Override
@@ -206,6 +207,7 @@ public class Server implements MapListener, CellListener, EntityListener, GameSt
     public void gameStateUpdated(GameState gameState) {
         synchronized (this.messages) {
             this.messages.add(new GameStateMessage(gameState));
+            this.messages.notify();
         }
     }
 }

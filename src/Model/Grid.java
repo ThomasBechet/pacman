@@ -87,7 +87,7 @@ public class Grid {
                     if (e instanceof Ghost) {
                         if (getEntityPosition(entity).equals(getEntityPosition(e))) {
                             if (((Pacman) entity).isHero()) {
-                                ((Ghost) e).die();
+                                ((Ghost) e).kill();
                             } else {
                                 ((Pacman) entity).removeLife();
                             }
@@ -100,7 +100,7 @@ public class Grid {
                     if (e instanceof Pacman) {
                         if (getEntityPosition(entity).equals(getEntityPosition(e))) {
                             if (((Pacman) e).isHero()) {
-                                ((Ghost) entity).die();
+                                ((Ghost) entity).kill();
                             } else {
                                 ((Pacman) e).removeLife();
                             }
@@ -162,14 +162,14 @@ public class Grid {
         this.spawns.put(entity, point);
         this.entityListener.entityUpdated(entity, point);
     }
-    private void removeEntity(Entity entity) {
-        this.entities.remove(entity);
-        this.positions.remove(entity);
-        this.entityListener.entityUpdated(entity, null);
-        if (this.controllers.containsValue(entity)) {
-            this.controllers.remove(this.controllers.get(entity));
-        }
-    }
+//    private void removeEntity(Entity entity) {
+//        this.entities.remove(entity);
+//        this.positions.remove(entity);
+//        this.entityListener.entityUpdated(entity, null);
+//        if (this.controllers.containsValue(entity)) {
+//            this.controllers.remove(this.controllers.get(entity));
+//        }
+//    }
 
     private void applyDirection(Point point, Direction direction) {
         switch (direction) {

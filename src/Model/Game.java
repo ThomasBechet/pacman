@@ -41,10 +41,20 @@ public class Game {
 
     public void start() {
         this.stop();
-        this.sequencer = new Sequencer(this.grid);
+        this.sequencer = new Sequencer(this.grid, this);
         this.sequencer.start();
-        this.gameState.setFlowState(GameState.FlowState.RUNNING);
         this.gameStateListener.gameStateUpdated(this.gameState);
+    }
+    public long getCountdown() {
+        return this.gameState.getCountdown();
+    }
+    public void setCountdown(long time) {
+        this.gameState.setCountdown(time);
+        this.gameStateListener.gameStateUpdated(this.gameState);
+    }
+    public void startCountdown() {
+        this.gameState.setFlowState(GameState.FlowState.COUNTDOWN);
+        this.setCountdown(5000);
     }
     public void stop() {
         if (this.gameState.getFlowState() != GameState.FlowState.STOPPED) {

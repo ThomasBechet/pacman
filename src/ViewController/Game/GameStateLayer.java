@@ -34,5 +34,11 @@ public class GameStateLayer extends GridPane {
         } else {
             this.setVisible(false);
         }
+        if (message.countdown > 0) {
+            this.setVisible(true);
+            this.text.setText(message.countdown / 1000 + "...");
+        } else {
+            this.setVisible(false);
+        }
     }
 }

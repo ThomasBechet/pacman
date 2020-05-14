@@ -12,9 +12,11 @@ public class Sequencer implements Runnable {
     private volatile boolean running;
     private Grid grid;
     private Timer doorsTimer;
+    private Game game;
 
-    public Sequencer(Grid grid) {
+    public Sequencer(Grid grid, Game game) {
         this.entities = grid.getEntities();
+        this.game = game;
         this.grid = grid;
         this.movableEntities = new HashMap<>();
         this.running = false;
@@ -49,32 +51,37 @@ public class Sequencer implements Runnable {
             }
         }, 5000, 5000);
 
+        this.game.startCountdown();
         while(this.running) {
 
             Instant current = Instant.now();
             long timeElapsed = java.time.Duration.between(lastTime, current).toMillis();
 
-            for(Entity entity : this.entities) {
-                if (entity instanceof MovableEntity) {
+            if (this.game.getCountdown() > 0) {
+                this.game.setCountdown(this.game.getCountdown() - timeElapsed);
+            } else {
+                for (Entity entity : this.entities) {
+                    if (entity instanceof MovableEntity) {
 
-                    // Handle entity creation
-                    MovableEntity movableEntity = (MovableEntity)entity;
-                    Duration duration = this.movableEntities.get(movableEntity);
-                    if (duration == null) {
-                        this.movableEntities.put(movableEntity, new Duration(0));
-                        duration = this.movableEntities.get(movableEntity);
+                        // Handle entity creation
+                        MovableEntity movableEntity = (MovableEntity) entity;
+                        Duration duration = this.movableEntities.get(movableEntity);
+                        if (duration == null) {
+                            this.movableEntities.put(movableEntity, new Duration(0));
+                            duration = this.movableEntities.get(movableEntity);
+                        }
+
+                        // Update movable entities if needed
+                        this.movableEntities.replace(movableEntity, new Duration(duration.toMillis() + timeElapsed));
+                        if (duration.greaterThanOrEqualTo(new Duration(movableEntity.getSpeed()))) {
+                            entity.update((long) (duration.toMillis()));
+                            this.movableEntities.replace(movableEntity, new Duration(0));
+                        }
+
+                    } else {
+                        // Other entities are simply updated
+                        entity.update(timeElapsed);
                     }
-
-                    // Update movable entities if needed
-                    this.movableEntities.replace(movableEntity, new Duration(duration.toMillis() + timeElapsed));
-                    if (duration.greaterThanOrEqualTo(new Duration(movableEntity.getSpeed()))) {
-                        entity.update((long)(duration.toMillis()));
-                        this.movableEntities.replace(movableEntity, new Duration(0));
-                    }
-
-                } else {
-                    // Other entities are simply updated
-                    entity.update(timeElapsed);
                 }
             }
 
