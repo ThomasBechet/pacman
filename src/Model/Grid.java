@@ -207,8 +207,8 @@ public class Grid {
         return !(cell instanceof Wall) && ((cell instanceof Door && entity instanceof Ghost && ((Door) cell).isOpenFor(((Ghost) entity).getId())) || !(cell instanceof Door));
     }
 
-    public void respawn (Entity entity) {
-        positions.replace(entity, entity instanceof MovableEntity ? (((MovableEntity) entity).getSpawn()) : null);
+    public void respawn(Entity entity) {
+        positions.replace(entity, entity instanceof MovableEntity ? (Point)(((MovableEntity) entity).getSpawn().clone()) : null);
     }
 
     private void loadCellFromCharacter(char c, Point position) {

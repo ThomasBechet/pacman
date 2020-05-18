@@ -43,20 +43,14 @@ public class Pacman extends MovableEntity {
         if (this.lifes > 0) {
             this.lifes--;
             this.grid.notifyEntity(this);
+        } else {
+            this.setEntityState(EntityState.DEAD);
         }
     }
 
     public void killGhost () {
         this.addScore(combo);
         this.combo *= 2;
-    }
-
-    @Override
-    public void respawn() {
-        if (lifes > 0)
-            super.respawn();
-        else
-            this.setEntityState(EntityState.DEAD);
     }
 
     public int getScore() {

@@ -9,6 +9,8 @@ public class MovableEntity extends Entity {
         PENDING
     }
 
+    public static int RESPAWN_TIME = 6000;
+
     private boolean isMoving;
     private Direction direction;
     private int speed;
@@ -43,15 +45,18 @@ public class MovableEntity extends Entity {
 
     @Override
     public void update(long timeElapsed) {
-        timeBeforeRespawn -= timeElapsed;
-        if (timeBeforeRespawn < 0 && this.entityState.equals(EntityState.PENDING)) {
-            timeBeforeRespawn = 0;
-            this.respawn();
+        if (this.entityState == EntityState.PENDING) {
+            timeBeforeRespawn -= timeElapsed;
+            if (timeBeforeRespawn < 0) {
+                timeBeforeRespawn = 0;
+                this.entityState = EntityState.ALIVE;
+                this.grid.respawn(this);
+            }
         }
 
         this.grid.move(this, this.direction);
 
-        this.tick();
+        tick();
 
         this.isMoving = this.grid.canMove(this, this.direction);
         this.grid.notifyEntity(this);
@@ -73,11 +78,6 @@ public class MovableEntity extends Entity {
 
     public void die() {
         this.entityState = EntityState.PENDING;
-        this.timeBeforeRespawn = 6000;
+        this.timeBeforeRespawn = MovableEntity.RESPAWN_TIME;
     }
-
-    public void respawn() {
-        this.entityState = EntityState.ALIVE;
-    }
-
 }

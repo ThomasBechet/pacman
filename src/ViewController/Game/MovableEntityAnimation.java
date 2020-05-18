@@ -15,6 +15,8 @@ import javafx.util.Duration;
 import java.awt.*;
 
 public class MovableEntityAnimation extends AnimationImage {
+    public final static double DEATH_ANIMATION_TIME = MovableEntity.RESPAWN_TIME * 0.1;
+
     private Timeline timeline;
     private Point start;
     private Point stop;
@@ -72,14 +74,12 @@ public class MovableEntityAnimation extends AnimationImage {
                 }
             } else if (entityMessage.entityState == MovableEntity.EntityState.PENDING) {
                 if (!this.playingRespawnAnimation) {
-                    this.duration = 6000;
+                    this.duration = MovableEntity.RESPAWN_TIME;
                     this.start = new Point(entityMessage.position.x * Sprite.TILE_SIZE, entityMessage.position.y * Sprite.TILE_SIZE);
                     this.stop = new Point(entityMessage.spawn.x * Sprite.TILE_SIZE, entityMessage.spawn.y * Sprite.TILE_SIZE);
                     this.playingRespawnAnimation = true;
                     this.playRespawnAnimation();
                 }
-            } else if (entityMessage.entityState == MovableEntity.EntityState.DEAD) {
-
             }
         }
     }
@@ -117,8 +117,8 @@ public class MovableEntityAnimation extends AnimationImage {
                 int stepY = Math.abs((this.stop.y / Sprite.TILE_SIZE) - (this.start.y / Sprite.TILE_SIZE));
                 int durationX = stepX > 0 ? (int)(((double)stepX / (double)(stepX + stepY)) * (double)this.duration) : 0;
                 int durationY = stepY > 0 ? (int)(((double)stepY / (double)(stepX + stepY)) * (double)this.duration) : 0;
-                int subdivisionX = stepX > 0 ? (durationX / 10) : 0;
-                int subdivisionY = stepY > 0 ? (durationY / 10) : 0;
+                int subdivisionX = durationX / 10;
+                int subdivisionY = durationY / 10;
 
                 this.timeline.getKeyFrames().clear();
 
@@ -126,14 +126,14 @@ public class MovableEntityAnimation extends AnimationImage {
                     double t = (double)i / (double)(subdivisionX - 1);
                     int posX = start.x + (int)(t * (double)(stop.x - start.x));
                     int posY = start.y;
-                    int time = (int)(t * (double)durationX);
+                    int time = (int)DEATH_ANIMATION_TIME + (int)(t * (double)durationX);
                     this.timeline.getKeyFrames().add(new KeyFrame(new Duration(time), new Frame(this, new Point(posX, posY))));
                 }
                 for (int i = 0; i < subdivisionY; i++) {
                     double t = (double)i / (double)(subdivisionY - 1);
                     int posX = stop.x;
                     int posY = start.y + (int)(t * (double)(stop.y - start.y));
-                    int time = durationX + (int)(t * (double)durationY);
+                    int time = (int)DEATH_ANIMATION_TIME + durationX + (int)(t * (double)durationY);
                     this.timeline.getKeyFrames().add(new KeyFrame(new Duration(time), new Frame(this, new Point(posX, posY))));
                 }
 

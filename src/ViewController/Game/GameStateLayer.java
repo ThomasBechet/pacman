@@ -31,12 +31,9 @@ public class GameStateLayer extends GridPane {
         if (message.waitingConnection) {
             this.setVisible(true);
             this.text.setText("Waiting players... " + message.currentPlayerCount + "/" + message.totalPlayer);
-        } else {
-            this.setVisible(false);
-        }
-        if (message.countdown > 0) {
+        } else if (message.countdown > 0) {
             this.setVisible(true);
-            this.text.setText(message.countdown / 1000 + "...");
+            this.text.setText("Starting in " + ((message.countdown / 1000) + 1) + " ...");
         } else {
             this.setVisible(false);
         }

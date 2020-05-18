@@ -129,6 +129,7 @@ public class Server implements MapListener, CellListener, EntityListener, GameSt
                 ClientThread clientThread = new ClientThread(socket, controller);
                 this.clientThreads.add(clientThread);
                 clientThread.start();
+                sendTo(socket, "controller@id=" + i);
             }
 
             // start game
@@ -146,18 +147,22 @@ public class Server implements MapListener, CellListener, EntityListener, GameSt
         } catch (InterruptedException e) {}
     }
 
+    private void sendTo(Socket client, String code) {
+        try {
+            PrintWriter printer = new PrintWriter(client.getOutputStream());
+            printer.println(code);
+            printer.flush();
+        } catch (IOException e) {
+            System.err.println("Failed to send message. Disconnecting client.");
+            try { client.close(); } catch (IOException ioe) {}
+            this.clientSockets.remove(client);
+        }
+    }
+
     private void sendToAll(String code) {
         synchronized (this.clientSockets) {
             for (Socket client : this.clientSockets) {
-                try {
-                    PrintWriter printer = new PrintWriter(client.getOutputStream());
-                    printer.println(code);
-                    printer.flush();
-                } catch (IOException e) {
-                    System.err.println("Failed to send message. Disconnecting client.");
-                    try { client.close(); } catch (IOException ioe) {}
-                    this.clientSockets.remove(client);
-                }
+                sendTo(client, code);
             }
         }
     }

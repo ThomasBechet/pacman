@@ -1,9 +1,6 @@
 package ViewController.Game;
 
-import Model.Entity;
-import Model.Pacman;
-import Model.PacmanController;
-import Network.Messages.EntityMessage;
+import Model.MovableEntity;
 import Network.Messages.PacmanMessage;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -17,10 +14,15 @@ public class PlayerInfo extends GridPane {
     private Text scoreText;
     private FlowPane flowPane;
 
-    public PlayerInfo(int controllerId) {
+    public PlayerInfo(int controllerId, int ownerControllerId) {
         this.setMinWidth(100);
         this.setMinHeight(70);
-        this.setBorder(new Border(new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, new CornerRadii(5.0), BorderWidths.DEFAULT)));
+        if (ownerControllerId == controllerId) {
+            this.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(5.0), BorderWidths.DEFAULT)));
+        } else {
+            this.setBorder(new Border(new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, new CornerRadii(5.0), BorderWidths.DEFAULT)));
+        }
+
         this.setPadding(new Insets(5, 5, 5, 5));
         this.setVgap(5.0);
 
@@ -46,16 +48,22 @@ public class PlayerInfo extends GridPane {
             this.scoreText.setText(Integer.toString(message.score));
         });
 
-        if (message.lifes != this.flowPane.getChildren().size()) {
+        if (message.entityState == MovableEntity.EntityState.DEAD) {
             Platform.runLater(() -> {
                 this.flowPane.getChildren().clear();
-                for (int i = 0; i < message.lifes; i++) {
-                    Sprite sprite = new Sprite();
-                    sprite.setSpriteSheet(PacmanAnimation.imagePacman);
-                    sprite.setFrame(0, 0);
-                    this.flowPane.getChildren().add(sprite);
-                }
             });
+        } else {
+            if (message.lifes + 1 != this.flowPane.getChildren().size()) {
+                Platform.runLater(() -> {
+                    this.flowPane.getChildren().clear();
+                    for (int i = 0; i < message.lifes + 1; i++) {
+                        Sprite sprite = new Sprite();
+                        sprite.setSpriteSheet(PacmanAnimation.imagePacman);
+                        sprite.setFrame(0, 0);
+                        this.flowPane.getChildren().add(sprite);
+                    }
+                });
+            }
         }
     }
 }

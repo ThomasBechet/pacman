@@ -94,27 +94,27 @@ public class GameView extends View implements MessageListener {
     @Override
     public void initialize() {
         try {
-            if (viewManager.getParameters().solo) {
+            if (this.viewManager.getParameters().solo) {
                 this.server = new Server();
                 this.server.open(55555, viewManager.getParameters().map, 1);
                 this.client = new Client(this);
                 this.client.connect((Inet4Address) Inet4Address.getLocalHost(), 55555);
             } else {
-                if (viewManager.getParameters().address != null) { // join
+                if (this.viewManager.getParameters().address != null) { // join
                     this.client = new Client(this);
                     this.client.connect(viewManager.getParameters().address, viewManager.getParameters().port);
                 } else { // create
                     this.server = new Server();
                     this.server.open(
-                            viewManager.getParameters().port,
-                            viewManager.getParameters().map,
-                            viewManager.getParameters().playerCount);
+                            this.viewManager.getParameters().port,
+                            this.viewManager.getParameters().map,
+                            this.viewManager.getParameters().playerCount);
                     this.client = new Client(this);
-                    this.client.connect((Inet4Address)Inet4Address.getLocalHost(), viewManager.getParameters().port);
+                    this.client.connect((Inet4Address)Inet4Address.getLocalHost(), this.viewManager.getParameters().port);
                 }
             }
         } catch (IOException e) {
-            viewManager.setView(ViewManager.State.MAIN);
+            this.viewManager.setView(ViewManager.State.MAIN);
         }
     }
 
@@ -165,7 +165,7 @@ public class GameView extends View implements MessageListener {
             PacmanMessage pacmanMessage = (PacmanMessage)message;
             if (this.playerInfos[pacmanMessage.controllerId] == null) {
                 if (this.cellLayer.getGridHeight() >= this.cellLayer.getGridWidth()) {
-                    this.playerInfos[pacmanMessage.controllerId] = new PlayerInfo(pacmanMessage.controllerId);
+                    this.playerInfos[pacmanMessage.controllerId] = new PlayerInfo(pacmanMessage.controllerId, client.getControllerId());
                     Platform.runLater(() -> {
                         this.playerInfoPane.getChildren().add(this.playerInfos[pacmanMessage.controllerId]);
                     });

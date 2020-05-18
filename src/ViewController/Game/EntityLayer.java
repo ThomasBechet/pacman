@@ -32,7 +32,6 @@ public class EntityLayer {
         if (sprite == null) {
             if (entityMessage instanceof PacmanMessage) {
                 sprite = new PacmanAnimation();
-                //sprite = new GhostAnimation(Ghost.BLUE);
             } else if (entityMessage instanceof GhostMessage) {
                 sprite = new GhostAnimation(((GhostMessage)entityMessage).ghostId);
             }
@@ -51,6 +50,13 @@ public class EntityLayer {
         if (entityMessage instanceof PacmanMessage || entityMessage instanceof GhostMessage) {
             MovableEntityAnimation movableEntityAnimation = (MovableEntityAnimation)sprite;
             movableEntityAnimation.update((MovableEntityMessage)entityMessage);
+
+            if (((MovableEntityMessage)entityMessage).entityState == MovableEntity.EntityState.DEAD) {
+                Platform.runLater(() -> {
+                    this.pane.getChildren().remove(this.sprites.get(entityMessage.id));
+                    this.sprites.remove(entityMessage.id);
+                });
+            }
         }
     }
 }

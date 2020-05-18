@@ -7,7 +7,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.ConnectException;
 import java.net.Inet4Address;
 import java.net.Socket;
 
@@ -15,9 +14,14 @@ public class Client {
     private Socket socket;
     private Thread thread;
     private MessageListener messageListener;
+    private int controllerId;
 
     public Client(MessageListener listener) {
         this.messageListener = listener;
+    }
+
+    public int getControllerId() {
+        return this.controllerId;
     }
 
     public void connect(Inet4Address address, int port) throws IOException {
@@ -79,6 +83,9 @@ public class Client {
         Parameter[] parameters = Parameter.parse(keyMessage[1]);
 
         switch (keyMessage[0]) {
+            case "controller":
+                this.controllerId = Integer.parseInt(parameters[0].value);
+                break;
             case "wall":
                 this.messageListener.onCellMessage(new WallMessage(parameters));
                 break;
@@ -99,6 +106,7 @@ public class Client {
                 break;
             case "gamestate":
                 this.messageListener.onGameStateMessage(new GameStateMessage(parameters));
+                break;
         }
     }
 }

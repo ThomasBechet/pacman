@@ -54,7 +54,7 @@ public class Game {
     }
     public void startCountdown() {
         this.gameState.setFlowState(GameState.FlowState.COUNTDOWN);
-        this.setCountdown(5000);
+        this.setCountdown(3000);
     }
     public void stop() {
         if (this.gameState.getFlowState() != GameState.FlowState.STOPPED) {

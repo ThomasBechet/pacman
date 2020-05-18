@@ -2,9 +2,13 @@ package ViewController.Game;
 
 import Model.Direction;
 import Model.Ghost;
+import Model.MovableEntity;
 import Network.Messages.GhostMessage;
 import Network.Messages.MovableEntityMessage;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.image.Image;
+import javafx.util.Duration;
 
 
 public class GhostAnimation extends MovableEntityAnimation {
@@ -28,6 +32,8 @@ public class GhostAnimation extends MovableEntityAnimation {
         return image;
     }
 
+    private boolean playingPendingAnimation = false;
+
     public GhostAnimation(int id) {
         super(imageFromId(id));
     }
@@ -37,7 +43,9 @@ public class GhostAnimation extends MovableEntityAnimation {
         super.update(entityMessage);
 
         Direction direction = entityMessage.direction;
-        if (((GhostMessage)entityMessage).isPanic) {
+        if (entityMessage.entityState == MovableEntity.EntityState.PENDING) {
+            this.setIndex(6);
+        } else if (((GhostMessage)entityMessage).isPanic) {
             if (((GhostMessage) entityMessage).panicTime < 3000 && ((GhostMessage)entityMessage).panicTime % 200 < 100) {
                 this.setIndex(5);
             } else {

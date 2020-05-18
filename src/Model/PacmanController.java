@@ -8,21 +8,19 @@ public class PacmanController {
     public static final int PLAYER_4 = 3;
 
     private Pacman pacman;
-    private int index;
+    private int id;
 
     public Pacman getPacman() {
         return this.pacman;
     }
 
-    public int getIndex() {
-        return this.index;
+    public int getId() {
+        return this.id;
     }
 
-    public int getEntityId() { return 0; }
-
-    public void setup(Pacman pacman, int index) {
+    public void setup(Pacman pacman, int id) {
         this.pacman = pacman;
-        this.index = index;
+        this.id = id;
     }
 
     public void up() {
