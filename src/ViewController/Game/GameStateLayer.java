@@ -1,5 +1,6 @@
 package ViewController.Game;
 
+import Model.GameState;
 import Network.Messages.GameStateMessage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -35,7 +36,16 @@ public class GameStateLayer extends GridPane {
             this.setVisible(true);
             this.text.setText("Starting in " + ((message.countdown / 1000) + 1) + " ...");
         } else {
-            this.setVisible(false);
+            if (message.flowState == GameState.FlowState.ENDED) {
+                if (message.winner == -1) {
+                    this.text.setText("Egality !");
+                } else {
+                    this.text.setText("Player " + (message.winner + 1) + " win !");
+                }
+                this.setVisible(true);
+            } else {
+                this.setVisible(false);
+            }
         }
     }
 }

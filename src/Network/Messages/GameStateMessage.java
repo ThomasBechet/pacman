@@ -10,11 +10,13 @@ public class GameStateMessage extends Message {
 
     public GameState.FlowState flowState;
     public long countdown;
+    public int winner;
 
     public GameStateMessage(GameState gameState) {
         this.waitingConnection = false;
         this.flowState = gameState.getFlowState();
         this.countdown = gameState.getCountdown();
+        this.winner = gameState.getWinner();
     }
     public GameStateMessage(int currentPlayerCount, int totalPlayer) {
         this.waitingConnection = true;
@@ -45,12 +47,17 @@ public class GameStateMessage extends Message {
                         case "stopped":
                             this.flowState = GameState.FlowState.STOPPED;
                             break;
+                        case "ended":
+                            this.flowState = GameState.FlowState.ENDED;
+                            break;
                     }
                     break;
                 case "countdown":
                     this.countdown = Long.parseLong(parameter.value);
                     break;
-
+                case "winner":
+                    this.winner = Integer.parseInt(parameter.value);
+                    break;
             }
         }
     }
@@ -74,6 +81,11 @@ public class GameStateMessage extends Message {
                     break;
                 case COUNTDOWN:
                     s+= "countdown=" + this.countdown;
+                    break;
+                case ENDED:
+                    s += "state=ended";
+                    s += ";winner=" + this.winner;
+                    break;
             }
         }
         return "gamestate@" + s;

@@ -5,12 +5,13 @@ public class GameState {
         STOPPED,
         RUNNING,
         PAUSED,
-        COUNTDOWN
+        COUNTDOWN,
+        ENDED
     }
 
     private long countdown;
-
     private FlowState flowState;
+    private int winner = -1;
 
     public GameState() {
         this.flowState = FlowState.STOPPED;
@@ -22,6 +23,7 @@ public class GameState {
     public FlowState getFlowState() {
         return this.flowState;
     }
+
     public void setCountdown (long countdown) {
         this.countdown = countdown;
         if (this.countdown <= 0) {
@@ -29,8 +31,14 @@ public class GameState {
             this.setFlowState(FlowState.RUNNING);
         }
     }
-
     public long getCountdown() {
         return countdown;
+    }
+
+    public void setWinner(int controllerId) {
+        this.winner = controllerId;
+    }
+    public int getWinner() {
+        return this.winner;
     }
 }

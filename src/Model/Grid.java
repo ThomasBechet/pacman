@@ -22,7 +22,6 @@ public class Grid {
     public static final char RED_GHOST_CHAR = 'R';
     public static final char PINK_GHOST_CHAR = 'P';
 
-
     private Cell[][] cells;
     private List<Entity> entities;
     private Map<Entity, Point> positions;
@@ -30,10 +29,13 @@ public class Grid {
     private Map<Integer, Pacman> controllers;
     private CellListener cellListener;
     private EntityListener entityListener;
+    private Game game;
+    private int totalPacgum;
 
-    public Grid(String file, CellListener cellListener, EntityListener entityListener, MapListener mapListener) {
+    public Grid(Game game, String file, CellListener cellListener, EntityListener entityListener, MapListener mapListener) {
         this.cellListener = cellListener;
         this.entityListener = entityListener;
+        this.game = game;
         this.entities = new ArrayList<>();
         this.positions = new HashMap<>();
         this.spawns = new HashMap<>();
@@ -82,6 +84,7 @@ public class Grid {
                             ((Pacman) entity).addLife();
                         }
                         ((Floor) curCell).removePacgum();
+                        this.totalPacgum--;
                         this.cellListener.cellUpdated(curCell, point);
                     }
                     for (Entity e : this.getEntities()) {
@@ -112,6 +115,29 @@ public class Grid {
                     }
                 }
             }
+        }
+
+        // Check remaining pacgums and pacmans
+        boolean allPacmanDead = true;
+        for (Pacman pacman : this.controllers.values()) {
+            if (pacman.getEntityState() != MovableEntity.EntityState.DEAD) {
+                allPacmanDead = false;
+                break;
+            }
+        }
+
+        if (this.totalPacgum <= 0 || allPacmanDead) {
+            int winner = -1;
+            int higherScore = 0;
+            for (int controller : this.controllers.keySet()) {
+                int score = this.controllers.get(controller).getScore();
+                if (score > higherScore) {
+                    winner = controller;
+                    higherScore = score;
+                }
+            }
+
+            this.game.ended(winner);
         }
     }
 
@@ -144,6 +170,8 @@ public class Grid {
     }
 
     private void loadMap(String map) {
+        this.totalPacgum = 0;
+
         char array[][] = MapTools.loadMap(map);
         int width = array.length;
         int height = array[0].length;
@@ -225,20 +253,23 @@ public class Grid {
             this.addEntity(pacman, position);
             this.controllers.put(controllerIndex, pacman);
             if (controllerIndex == 1) {
-                pacman.setSpeed(200);
+                pacman.setSpeed(250);
             } else if (controllerIndex == 2) {
-                pacman.setSpeed(200);
+                pacman.setSpeed(250);
             } else if (controllerIndex == 3) {
-                pacman.setSpeed(230);
+                pacman.setSpeed(250);
             } else if (controllerIndex == 4) {
-                pacman.setSpeed(100);
+                pacman.setSpeed(250);
             }
         } else if (c == SIMPLE_PACGUM_CHAR) {
             this.cells[position.x][position.y] = new Floor(new Pacgum(10, PacgumType.BASE));
+            this.totalPacgum++;
         } else if (c == SUPER_PACGUM_CHAR) {
             this.cells[position.x][position.y] = new Floor(new Pacgum(50, PacgumType.SUPER));
+            this.totalPacgum++;
         } else if (c == FRUIT_CHAR) {
             this.cells[position.x][position.y] = new Floor(new Pacgum(100, PacgumType.FRUIT));
+            this.totalPacgum++;
         } else if (c == BLUE_GHOST_CHAR) {
             this.cells[position.x][position.y] = new Floor(null);
             Ghost ghost = new Ghost(this, Ghost.BLUE, position);

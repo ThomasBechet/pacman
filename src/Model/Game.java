@@ -29,7 +29,7 @@ public class Game {
 
     public void loadMap(String map) {
         if (this.gameState.getFlowState() == GameState.FlowState.STOPPED) {
-            this.grid = new Grid(map, this.cellListener, this.entityListener, this.mapListener);
+            this.grid = new Grid(this, map, this.cellListener, this.entityListener, this.mapListener);
         }
     }
 
@@ -77,5 +77,12 @@ public class Game {
             this.gameState.setFlowState(GameState.FlowState.RUNNING);
             this.gameStateListener.gameStateUpdated(this.gameState);
         }
+    }
+
+    public void ended(int winner) {
+        this.gameState.setFlowState(GameState.FlowState.ENDED);
+        this.gameState.setWinner(winner);
+        this.gameStateListener.gameStateUpdated(this.gameState);
+        this.sequencer.stop();
     }
 }
