@@ -44,6 +44,7 @@ public class Sequencer implements Runnable {
     public void run() {
         Instant lastTime = Instant.now();
 
+        // Initialize the scheduler to update the next door at regular interval
         this.doorsTimer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -51,12 +52,21 @@ public class Sequencer implements Runnable {
             }
         }, 5000, 5000);
 
+        // Starting the game count down
         this.game.startCountdown();
+
+        // The game loop is based on a classic loop model.
+        // It ticks at regular interval and update required
+        // entities. Using this model ensures no multiple threads
+        // are used to update the model.
         while(this.running) {
 
+            // Get the current time and compute the delta time since the last loop iteration
             Instant current = Instant.now();
             long timeElapsed = java.time.Duration.between(lastTime, current).toMillis();
+            lastTime = current;
 
+            // Check if the party is starting
             if (this.game.getCountdown() > 0) {
                 this.game.setCountdown(this.game.getCountdown() - timeElapsed);
             } else {
@@ -89,8 +99,6 @@ public class Sequencer implements Runnable {
             try {
                 Thread.sleep(5); // Required to reduce loop lag introduced by a zero deltatime
             } catch(InterruptedException exception) {  }
-
-            lastTime = current;
         }
 
         this.doorsTimer.cancel();

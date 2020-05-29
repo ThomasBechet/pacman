@@ -13,6 +13,9 @@ import java.net.Socket;
 import java.util.*;
 
 public class Server implements MapListener, CellListener, EntityListener, GameStateListener {
+    /**
+     * Client Thread, one thread is created for each client
+     */
     private class ClientThread extends Thread {
         private Socket socket;
         private PacmanController controller;
@@ -23,6 +26,7 @@ public class Server implements MapListener, CellListener, EntityListener, GameSt
         @Override
         public void run() {
             try {
+                // Received specific client message (controller direction)
                 BufferedReader input = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
                 while(true) {
                     String line = input.readLine();
@@ -55,11 +59,11 @@ public class Server implements MapListener, CellListener, EntityListener, GameSt
     private int playerCount;
     private int ids;
     private String map;
-
     private Thread thread;
     private ArrayList<ClientThread> clientThreads;
     private ArrayList<Socket> clientSockets;
 
+    // Model
     private Game game;
 
     public Server() {
@@ -78,6 +82,7 @@ public class Server implements MapListener, CellListener, EntityListener, GameSt
             this.playerCount = playerCount;
             this.map = map;
 
+            // A game model is created and all listener are added to listen updates
             this.game = new Game();
             this.game.setMapListener(this);
             this.game.setCellListener(this);
@@ -105,11 +110,15 @@ public class Server implements MapListener, CellListener, EntityListener, GameSt
         } catch (IOException e) {}
     }
 
+    /**
+     * Server thread
+     */
     private void routine() {
         this.clientSockets = new ArrayList<>();
 
         try {
             try {
+                // Waiting for required player count
                 while (this.clientSockets.size() < this.playerCount) {
                     Socket socket = this.socket.accept();
                     System.out.println("new connection from " + socket.toString());
@@ -147,6 +156,11 @@ public class Server implements MapListener, CellListener, EntityListener, GameSt
         } catch (InterruptedException e) {}
     }
 
+    /**
+     * Send message code to a specific client
+     * @param client target client
+     * @param code message code
+     */
     private void sendTo(Socket client, String code) {
         try {
             PrintWriter printer = new PrintWriter(client.getOutputStream());
@@ -159,6 +173,10 @@ public class Server implements MapListener, CellListener, EntityListener, GameSt
         }
     }
 
+    /**
+     * Send a message to all clients
+     * @param code message code
+     */
     private void sendToAll(String code) {
         synchronized (this.clientSockets) {
             for (Socket client : this.clientSockets) {
@@ -166,6 +184,11 @@ public class Server implements MapListener, CellListener, EntityListener, GameSt
             }
         }
     }
+
+    /**************************************************************
+        ALL LISTENER ON THE GAME MODEL
+        All updates are simply replicated to all connected clients
+     **************************************************************/
 
     @Override
     public void mapUpdated(Cell[][] cells) {

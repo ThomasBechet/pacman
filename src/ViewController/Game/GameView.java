@@ -120,7 +120,6 @@ public class GameView extends View implements MessageListener {
 
     @Override
     public void terminate() {
-        System.out.println("try disconnect");
         if (this.server != null) this.server.close();
         if (this.client != null) this.client.disconnect();
     }
