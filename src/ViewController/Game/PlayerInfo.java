@@ -56,7 +56,7 @@ public class PlayerInfo extends GridPane {
             if (message.lifes + 1 != this.flowPane.getChildren().size()) {
                 Platform.runLater(() -> {
                     this.flowPane.getChildren().clear();
-                    for (int i = 0; i < message.lifes + 1; i++) {
+                    for (int i = 0; i < message.lifes; i++) {
                         Sprite sprite = new Sprite();
                         sprite.setSpriteSheet(PacmanAnimation.imagePacman);
                         sprite.setFrame(0, 0);
