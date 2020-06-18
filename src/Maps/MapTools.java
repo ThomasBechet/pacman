@@ -57,6 +57,8 @@ public class MapTools {
                 characters += line;
             }
             height = y;
+
+            fileReader.close();
         } catch(Exception exception) {
             System.out.println(exception.getMessage());
         }
@@ -92,6 +94,7 @@ public class MapTools {
         } catch(DirectoryNotEmptyException e) {
             System.out.println("Directory is not empty.");
         } catch(IOException e) {
+            System.out.println(e);
             System.out.println("Invalid permissions.");
         }
     }
