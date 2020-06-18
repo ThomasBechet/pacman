@@ -44,8 +44,6 @@ public class PlayerInfo extends GridPane {
     }
 
     public void updateEntity(PacmanMessage message) {
-        System.out.println(message.lifes);
-
         Platform.runLater(() -> {
             this.scoreText.setText(Integer.toString(message.score));
         });
