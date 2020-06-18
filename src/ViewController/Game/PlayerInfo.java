@@ -44,6 +44,8 @@ public class PlayerInfo extends GridPane {
     }
 
     public void updateEntity(PacmanMessage message) {
+        System.out.println(message.lifes);
+
         Platform.runLater(() -> {
             this.scoreText.setText(Integer.toString(message.score));
         });
@@ -53,17 +55,15 @@ public class PlayerInfo extends GridPane {
                 this.flowPane.getChildren().clear();
             });
         } else {
-            if (message.lifes + 1 != this.flowPane.getChildren().size()) {
-                Platform.runLater(() -> {
-                    this.flowPane.getChildren().clear();
-                    for (int i = 0; i < message.lifes; i++) {
-                        Sprite sprite = new Sprite();
-                        sprite.setSpriteSheet(PacmanAnimation.imagePacman);
-                        sprite.setFrame(0, 0);
-                        this.flowPane.getChildren().add(sprite);
-                    }
-                });
-            }
+            Platform.runLater(() -> {
+                this.flowPane.getChildren().clear();
+                for (int i = 0; i < message.lifes; i++) {
+                    Sprite sprite = new Sprite();
+                    sprite.setSpriteSheet(PacmanAnimation.imagePacman);
+                    sprite.setFrame(0, 0);
+                    this.flowPane.getChildren().add(sprite);
+                }
+            });
         }
     }
 }
